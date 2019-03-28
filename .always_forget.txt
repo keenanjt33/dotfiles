@@ -1,0 +1,1334 @@
+# .always_forget.txt
+#
+# UNIX cheatsheet
+#
+# Much copied from awdeorio's: https://github.com/awdeorio/dotfiles/blob/master/.always_forget.txt
+#
+# Keenan Tullis - keenanjt@gmail.com
+
+# Files and folders
+ls                                      # list directory contents
+ls -l                                   # include time, size, etc.
+ls -a                                   # include hidden files
+ls -A                                   # include hidden files, but not . or ..
+ls -t                                   # sort by time
+ls -ltr                                 # newest files last
+ls --color                              # colorize output
+ls --color=auto                         # colorize output only in tty
+ls --human-readable                     # human-readable file sizes
+ls --ignore-backups                     # ignore *~ files
+ls --ignore $'Icon\r'"                  # ignore OSX Icon files
+ls --quoting-style=literal              # don't quote for 'File with spaces'
+ls -R                                   # list recursively
+tree                                    # pretty-print recursively
+tree --matchdirs -I 'venv3|*pycache*'   # ^^^ ignore Python "hidden" stuff
+mkdir DIR                               # make a directory
+mkdir -p DIR                            # ^^^ make intermediate dirs as needed
+rmdir DIR                               # remove a directory
+rm FILE                                 # remove a file
+rm -r DIR                               # remove directory and files
+rm -rf DIR                              # ^^^ and don't ask any questions
+shred -u FILE                           # overwrite file with junk before remove
+dircolors                               # set LS_COLORS using defaults
+dircolors -b                            # ^^^ for Bourne shell
+dircolors -b ${HOME}/.DIR_COLORS        # ^^^ with custom colors
+stat FILE                               # file modification times, etc.
+touch FILE                              # create empty file, if it doesn't exist
+touch FILE                              # update mtime, atime to NOW
+ln -s FILE1 FILE2                       # create soft link
+ln -s -t DIR FILE                       # create soft link in DIR
+
+# Paths and files
+pwd                                     # current directory
+pwd -P                                  # current directory, absolute path
+readlink -f PATH                        # absolute path (GNU only)
+cd                                      # change to home directory
+cd ..                                   # change to directory up
+cd DIR                                  # change to directory
+cd -                                    # return to previous directory (bash)
+cd $(dirname "$BASH_SOURCE") && pwd -P  # absolute path of sourced bash script
+cd $(dirname $0) && pwd -P              # absolute path of executed bash script
+realpath DIR                            # absolute path of DIR
+pushd DIR                               # push DIR onto stack (bash)
+popd                                    # pop dir off stack and cd there (bash)
+dirs -v                                 # print stack (bash)
+cd ~2                                   # cd to 2nd dir on stack (bash)
+cp FILE ~2                              # use ~2 as an alias for a DIR (bash)
+cp -L                                   # Copy files pointed to by symlinks
+
+# Paths and executables
+which CMD                               # print path to CMD
+which -a CMD                            # print all paths to CMD (GNU)
+whereis CMD                             # print all paths to CMD
+export PATH=$PATH:NEW_DIR               # add new directory to PATH (bash)
+type -a CMD                             # include shell functions/aliases (bash)
+
+# Finding files
+find . -name hello.txt                  # find hello.txt, starting at PWD
+find / -name hello.txt                  # find hello.txt, starting at /
+find . '*.txt'                          # txt files
+find . '*hello*'                        # anything with "hello" in the filename
+find . -type f                          # plain files
+find . -type d                          # directories
+find . -name '*~' -exec rm -v {} \;     # remove tilde files
+find . -name '*~' | xargs rm -v         # remove tilde files
+find . -name GLOB -depth -delete        # remove files
+find . -exec grep -H PATTERN {} \;      # find + grep, grep will print filenames
+find . | xargs grep -H PATTERN          # find + grep, grep will print filenames
+find . -print0 | xargs -0 CMD           # handle spaces in filenames
+find . | xargs -n1 CMD                  # process files one at a time
+locate hello.txt                        # search system database for hello.txt
+grep -r PATTERN .                       # recursively search file content
+grep -rI PATTERN .                      # ^^^ ignoring binary files
+git grep PATTERN                        # recursively search git-controled files
+ag PATTERN                              # The Silver Searcher, see section below
+ag PATTERN --color | less -r
+ag -l                                   # Filenames only
+ag --ignore '*test*'                    # Ignore files/directories with "test"
+
+# Processes and Threads
+ps                                      # display my processes
+ps -u USER                              # ^^^ USER's processes
+ps -ax                                  # all processes on the machine
+ps -axM                                 # all processes and threads (BSD)
+ps axm                                  # all processes and threads (GNU)
+ps -M                                   # threads (BSD)
+ps -m                                   # threads (GNU)
+ps -ww                                  # don't chop long lines
+ps -c                                   # basename of executable instead of full
+ps -axvcm                               # sort by memory usage
+ps -axvcr                               # sort by CPU usage
+pstree                                  # visualization of processes
+top                                     # dynamic view of processes
+top -H                                  # dynamic view of threads
+top -b -n7 -d0.5 | grep ^Cpu | sed 1d | grep -oE '[0-9]+\.?[0-9]*% *id' | grep -oE '[0-9]+\.?[0-9]*' | awk '{sum+=$0} END {print sum/NR}' # CPU usage (%)
+htop                                    # fancy performance monitor
+  "M"                                   # htop sort by memory usage
+  "P"                                   # htop sort by processor usage
+  "T"                                   # htop sort by time
+  "p"                                   # htop toggle process fullname/basename
+  "t"                                   # htop toggle tree view
+nmon                                    # fancy performance monitor
+pgrep STRING                            # search for processes, return PID
+pgrep -af STRING                        # ^^^ full process name & args (GNU)
+pgrep -lf STRING                        # ^^^ full process name & args (BSD)
+pgrep -u USER                           # only match USER's processes
+pkill                                   # ^^^ and kill process
+pkill -f                                # ^^^ full process name & args
+kill PID                                # kill process with PID
+kill -PID                               # kill process group with PID
+kill -9 PID                             # kill process using signal 9
+kill -0 PID                             # Check if process is running
+kill -0 PID &>/dev/null && echo running # Check if process is running
+killall NAME                            # kill all processes with NAME
+killall -9 NAME                         # kill all using signal 9
+CMD &                                   # start CMD in the background
+jobs                                    # list active or suspended jobs
+fg                                      # bring background command to foreground
+[control-z]                             # suspend current CMD
+bg                                      # send suspended CMD to background
+disown                                  # alternative to "bg", but like nohup
+nohup CMD &                             # logout won't stop CMD
+nohup nice CMD &                        # lower priority
+nohup CMD < /dev/null > LOG 2>&1        # redirect all streams
+nohup CMD 0<&- &> /dev/null &           # redirect all streams
+lsof                                    # list open files owned by processes
+cat /proc/<PID>/environ | tr '\000' '\n'# inspect environment of running proc
+
+# Commonly used signals
+1  HUP  SIGHUP   hang up; automatic on logout; reload configuration for daemons
+2  INT  SIGINT   interrupt, Control-C
+3  QUIT SIGQUIT  quit
+6  ABRT SIGABRT  abort
+9  KILL SIGKILL  non-catchable, non-ignorable kill; "rude shutdown"
+14 ALRM SIGALRM  alarm clock
+15 TERM SIGTERM  software termination signal; "polite shutdown request"
+   EXIT          program exit, any exit code (pseudo-signal, bash only)
+   ERR           program exit, non-zero (pseudo-signal, bash only)
+
+# Environment
+env                                     # List environment variables
+env -i CMD                              # Run CMD with empty environment
+echo $PATH                              # Command search path
+echo $PS1                               # Shell prompt
+echo $LD_LIBRARY_PATH                   # run time library resolution
+echo $MANPATH                           # man search dirs
+
+# Network Utilities
+# Cheat sheet https://pbs.twimg.com/media/DzP-KfpV4AA4TH2.jpg
+ping google.com                         # Check if a host is up
+ping -c3 google.com                     # Only send 3 packets
+ping -Iwlan0 google.com                 # Ping with a specific NIC
+host www.google.com                     # DNS lookup
+dig www.google.com                      # DNS lookup
+dig +short www.google.com               # DNS lookup, scriptable
+nslookup                                # DNS lookup
+nslookup -type=ns eecs.umich.edu        # DNS with authoritative name servers
+dig -x 141.212.106.7                    # reverse DNS lookup
+dig +short -x 141.212.106.7             # reverse DNS lookup, scriptable
+whois www.google.com                    # domain name registration info
+nmap HOST                               # what ports are open?
+nmap -A -T4 HOST                        # what ports are open?
+nmap -sn -PR 192.168.0.0/24             # which hosts are up my subnet?
+netstat -at                             # list TCP connections
+netstat -au                             # list UDP connections
+netstat -ant                            # disable DNS lookup (faster)
+netstat -tl                             # listening TCP connections
+netstat -atn | grep ':22'               # ssh connections on this machine?
+netstat -l numeric-ports | grep 80      # what's using port 80?
+sudo fuser -v -n tcp 80                 # who's using port 80?
+lsof -n -i                              # who's using which ports?
+nc HOST PORT                            # intiate connection "cat over a socket"
+nc -c                                   # close connection after send (GNU)
+nc -q                                   # close connection after send (BSD)
+nc                                      # close connection after send (BSD)
+nc -l -p PORT                           # listen for incoming connection (GNU)
+nc -l localhost PORT                    # listen for incoming connection (BSD)
+nc -v -z HOST PORT                      # check connection to HOST on PORT
+ncat -w 2 -v HOST PORT                  # check connection to HOST on PORT
+traceroute                              # route packets take to network host
+telnet HOST 80                          # connect to web server
+openssl s_client -quiet -connect www.google.com:443 # ^^^ with SSL
+tcpdump                                 # watch packets on all network ifcs
+tcpdump -i eth0                         # watch packets on one network interface
+tcpdump tcp                             # only one protocol
+tcpdump port 80                         # only one port
+tcpdump host 1.2.3.4                    # only one host
+tcpdump dst 1.2.3.4                     # only one dest
+tcpdump src 1.2.3.4                     # only one source
+tcpdump -S "tcp[tcpflags] & (tcp-syn|tcp-ack|tcp-fin) != 0" # 3-way handshake
+tcpdump -S "port 80 and (tcp[tcpflags] & (tcp-syn|tcp-ack|tcp-fin) != 0)" #  3-way handshake on port 80
+tcpdump -S "host web.eecs.umich.edu and port 80 and (tcp[tcpflags] & (tcp-syn|tcp-ack|tcp-fin) != 0)"   # 3-way handshake on port 80
+tcpdump -S -s0 -A port 80               # Sniff HTTP packets in ASCII format
+tshark                                  # CLI packet analysis
+tshark -r FILE.pcap                     # ^^^ from file
+tshark -Tfields -e text                 # ^^^ any sent text
+tshark -Tfields -e http.file_data       # ^^^ HTTP payload
+tshark -Tfields -e _ws.col.Protocol -e _ws.col.Info  # Manually specify defaults
+tshark -Tfields -e _ws.col.Protocol -e _ws.col.Info -e http.file_data  # HTTP, defaults
+iftop                                   # display bandwidth usage
+ngrep                                   # grep for network
+mitmproxy                               # spy on SSL connections
+p0f                                     # OS fingerprinting
+ntop                                    # See what's using network bandwidth
+iftop                                   # See what's using network bandwidth
+
+# Web Utilities
+python -m SimpleHTTPServer 8000         # start a file server at ./ on port 8000
+python3 -m http.server 8000             # start a file server at ./ on port 8000
+wget https://www.google.com/            # download one page
+wget -m andrewdeorio.com                # download everything
+wget URL -O FILE                        # output to FILE
+wget --random-wait                      # avoid a blacklist with random timing
+wget -r                                 # recursive (default max depth 5)
+wget -p                                 # include all files, including images
+wget -e robots=off                      # disregard robots.tx
+wget -U mozilla/5.0                     # User-agent (browser identity)
+wget --limit-rate=20k                   # reduce download rate
+wget -b                                 # background
+wget -o FILE                            # log output
+wget --random-wait -r -p -e robots=off -U mozilla/5.0 URL  # crawler
+wget --random-wait -r -p -e robots=off -U mozilla/5.0 URL -b -o log  # crawler
+wget --spider                           # check if file exists
+youtube-dl URL                          # download a youtube video
+curl --verbose                          # watch protocol in action
+curl --trace-ascii log.txt              # watch protocol in action, more detail
+curl --trace-ascii log.txt --trace-time # include timing
+curl --data "query=aa" http://localhost:5000/query # send POST request
+curl -H "Content-type: application/json" \         # POST JSON
+     -X POST http://127.0.0.1:5000/ \
+     -d '{"message":"Hello Data"}'
+curl --user-agent "Mozilla/5.0"         # Fake the user agent
+curl ifconfig.me                        # what is my IP address?
+curl ipinfo.io/ip                       # what is my IP address?
+ipcalc                                  # see what an IP or CIDR means
+httping HOST:PORT                       # check if an HTTP server is up
+curl --output /dev/null --silent --insecure --head --fail URL # check HTTP up
+dig +short myip.opendns.com @resolver1.opendns.com # what is my IP address?
+vnu --root DIR                          # HTML5/W3C validator
+html5validator --root DIR               # HTML5/W3C validator
+webkit2png https://google.com           # Screenshot web page
+webkit2png google.htm                   # Screenshot saved web page
+ls *.html | xargs -n1 webkit2png        # Screenshot many saved web pages
+speedtest                               # Test upload and download speeds
+
+# Email
+sendmail user@example.com < email.txt   # send email from CLI
+sendmail -t < email.txt                 # read "TO" field from file
+
+# SSH
+ssh HOST                               # connect to HOST
+ssh USER@HOST                          # connect to HOST as USER
+ssh -t HOST1 HOST2                     # connect to HOST2 through HOST1
+ssh -A                                 # forward SSH keys
+ssh -vT                                # debug authentication issues
+ssh -T                                 # don't set up a terminal
+ssh -v                                 # verbose
+ssh -vvv                               # super verbose
+ssh -f                                 # go to background
+ssh -N                                 # don't execute a remote command
+ssh -n                                 # redirect stdin from /dev/null
+ssh -vnNTL 8000:localhost:8000 HOST    # local port forwarding, 1 hop
+ssh -vnNTL 8000:HOST2:8000 HOST1       # local port forwarding, 2 hop
+ssh -vnNTR 8000:localhost:8000 HOST    # remote port forwarding
+ssh -D8000 HOST                        # dynamic application-level port forward
+ssh HOST CMD                           # execute CMD on HOST
+ssh HOST -- CMD                        # execute CMD on HOST, with CMD options
+yes | pv | ssh HOST "cat > /dev/null"  # network throughput test
+
+# SSH keys
+ssh-keygen                             # generate an SSH key pair
+ssh-keygen -t rsa -b 4096 -C EMAIL     # generate an SSH key pair, secure
+ssh-keygen -R HOST                     # remove HOST from known_hosts
+ssh-add -l                             # verify GPG-SSH connection
+ssh-add -L                             # print public key from agent
+
+# Shell scripting
+yes                                     # keep printing "y" over and over
+yes STRING                              # keep printing STRING over and over
+yes | INSTALL_CMD                       # answer yes to all installer questions
+yes > file                              # quickly generate a big file
+pv                                      # monitor progress of data thru a pipe
+exit N                                  # exit N
+true                                    # exit zero
+false                                   # exit non-zero
+trap "FUNC" 1 2 3 15                    # run FUNC on receiving a signal
+trap "kill 0" SIGINT                    # kill all proc in proc group on ctrl-c
+trap cleanup SIGHUP SIGINT SIGQUIT SIGKILL SIGTERM ERR  # all but clean exit
+tee FILE                                # copy stdin to both stdout and FILE
+tee FILE1 FILE2                         # copy stdin to stdout, FILE1, FILE2
+tee /dev/stderr                         # copy stdin to both stdout and stderr
+echo hello | tee FILE                   # write "hello" to both stdout and FILE
+mktemp                                  # create a temporary file
+mktemp -t PREFIX                        # ^^^ starting with PREFIX
+mktemp -d                               # create a temporary directory
+basename /bin/bash                      # returns "bash"
+dirname /bin/bash                       # return "/bin"
+sleep                                   # sleep (1, 1s, 1m, etc.)
+seq 10 | xargs -n1 echo "hello"         # do something N times (see also {1..N})
+printf                                  # C-workalike print function
+
+# Bash shell scripting
+echo "hello world"                      # print stdout
+echo "hello world" >&2                  # print to stderr
+echo "hello world" > FILE               # print file
+echo "hello world" >> FILE              # append file
+echo "hello world" &>> FILE             # append stdout and stderr to file
+CMD > /dev/null                         # ignore stdout
+CMD 1>-                                 # ignore stdout
+CMD 2> /dev/null                        # ignore stderr
+CMD 2>-                                 # ignore stderr
+CMD &> /dev/null                        # ignore both stdout and stderr
+CMD > /dev/null 2>&1                    # ignore both stdout and stderr
+CMD &>-                                 # ignore both stdout and stderr
+CMD 2>&1                                # copy stderr to stdout
+CMD1 2>&1 | CMD2                        # stdout + stderr -> pipe
+CMD1 &| CMD2                            # stdout + stderr -> pipe
+0<&-                                    # close stdin
+<<TAG ... TAG                           # here document (for inline scripts)
+<<-TAG ... TAG                          # ^^^ ignore leading tabs, *tabs only*
+<<'TAG' ... TAG                         # ^^^ no variable expansion
+cat > FILE << EOF ... EOF               # ^^^ for writing a file
+<<< "STRING"                            # here string
+<( CMD )                                # create a temporary named pipe
+diff <(echo a) <(echo b)                # diff the output of two commands
+exec > >(tee logfile.txt); exec 2>&1;   # copy stdout and stderr to log file
+exec 1<&-                               # close stdout file descriptor
+exec 2<&-                               # close stderr file descriptor
+exec 1<>LOG_FILE                        # open stdout as LOG_FILE file for r/w
+exec 2>&1                               # redirect stderr to stdout
+echo "this goes to LOG_FILE, not screen # (after above 4 exec commands)
+$#                                      # argc in bash
+[ $# -lt 1 ] && exit 1                  # check # args and quit
+$@                                      # argv in bash
+$0                                      # argv[0] in bash
+set -o verbose                          # echo commands to stdout
+cd $(dirname "$BASH_SOURCE") && pwd -P  # absolute path of sourced script
+eval                                    # run in current shell
+exec                                    # spawn a new shell to replace current
+TAB=$'\t'                               # TAB literal
+echo "hello" | tee >(cat) >(cat)        # copy stdout to two commands
+set -u                                  # error on unset variables
+set -e                                  # Abort on non-zero NOTE: pipes break it
+set -o pipefile                         # ^^^ for pipes
+set -x                                  # Print commands
+set -Eeuxo pipefail                     # Stop on errors, print commands
+STR=$'hello\nworld'                     # String with newlines
+EXTENSION="${FILENAME##*.}"             # Parse file extension
+CSVFILE="${TXTFILE%.txt}.csv"           # Change file extension
+for i in $(ls *.txt); do mv $i ${i%.txt}.md; done  # Change many file extensions
+IFS= read -s  -p Password: PASSWORD     # Ask user for password
+for i in $(cat file); do                # for loop, word-by-word
+IFS=$'\n' for i in $(cat file); do      # for loop, line-by-line
+[ -z "${VAR}" ]                         # unset or set to the empty string"
+[ -z "${VAR+set}" ]                     # unset"
+[ -z "${VAR-unset}" ]                   # set to the empty string"
+[ -n "${VAR}" ]                         # set to a non-empty string"
+[ -n "${VAR+set}" ]                     # set, possibly to empty string
+[ -n "${VAR-unset}" ]                   # either unset or set non-empty string
+hash CMD                                # return true if CMD is in PATH
+echo {1..10}                            # expands to 1 2 3 ... 10 (see also seq)
+printf 'a%.0s' {1..10}                  # Repeat letter 'a' 10 times
+
+# Bash shell productivity
+cp file{,.bak}                          # Backup a file
+mv file{,.old}                          # Move a file
+sudo !!                                 # Repeat last command with sudo
+ls !$                                   # Last item from last cmd
+ls !^                                   # First (non-cmd) item from last cmd
+ls !*                                   # All (non-cmd) items from last cmd
+ls -d */                                # List only directories
+echo !$:h                               # Directory part of prev cmd last item
+echo !$:t                               # File part of prev cmd last item
+echo !$:r                               # ^^^ w/o suffix
+echo !$:e                               # Remove all but the suffix
+[Ctrl + r]                              # Search history
+[Ctrl + g]                              # Cancel search history
+[Ctrl + p]                              # Prev history command
+[Ctrl + n]                              # Next history command
+[Alt + .]                               # Last word on prev history command
+[Ctrl + l]                              # Clear screen
+[Ctrl + s]                              # Stop output to the screen
+[Ctrl + q]                              # Restart output to the screen
+[Ctrl + c]                              # Terminate command
+[Ctrl + z]                              # Suspend command
+fg                                      # Restart command in foreground
+bg                                      # Restart command in background
+
+# grep
+grep PATTERN                            # search for pattern
+grep -E PATTERN                         # extended regex
+grep -E '(PATTERN1|PATTERN2)'           # two patterns
+egrep PATTERN                           # extended regex
+grep -o                                 # only print the matched pattern
+grep -v                                 # invert match
+grep -Ev '(PATTERN1|PATTERN2)'          # invert two matches
+grep -A10                               # print match + 10 lines after
+grep -B10                               # print match + 10 lines before
+grep -10                                # same as grep -A10 -B10
+grep -a -b -B100 -A100 phrase /dev/sda3 # recover deleted files
+egrep -o "\w+([._-]\w)*@\w+([._-]\w)*\.\w{2,4}" -e  # email addresses
+# grep for tab in bash: Ctrl-V TAB
+grep '^.\{10\}$'                        # 10 letter words
+zgrep                                   # grep gzip'ed files
+fgrep                                   # fixed patterns (no regex), faster
+pcregrep                                # Perl Compatible Regex
+grep -P                                 # Perl regex
+ptargrep                                # grep files insize a tarball
+
+# The Silver Searcher
+# https://github.com/ggreer/the_silver_searcher
+# brew install the_silver_searcher
+ag PATTERN                              # search for PATTERN
+ag --list-file-types                    # supported filetype-specific searches
+ag --python                             # filetype-specific search
+
+# sed
+sed -rn '/PATTERN/p'                    # grep work-a-like
+sed -r                                  # use extended regex
+sed 1d                                  # print all but first line
+sed '$d'                                # print all but last line
+sed -n '52p'                            # print line 52
+sed '52q;d'                             # ^^^ efficient on large files
+sed -n '45,50p' filename                # print lines 45-50
+sed -n '51q;45,50p' filename            # ^^^ efficient on large files
+sed -n '/BEGIN/,/END/p'                 # print lines between "BEGIN" and "END"
+sed -e '/before/q'                      # stop when line matches "before"
+sed -i -e 's/before/after/g' file.txt   # replaces "before" with "after"
+perl -pi -e 's/old_string/new_string/g' # ^^^ perl alternative
+sed 's/\([a-z]*\).*/\1/'                # keep only lowercase letters
+sed 's/^/before/'                       # prepend every line
+sed 's/$/after/'                        # append every line
+sed '/before/d'                         # filter lines matching "before"
+sed -nr 's/@@  ([0-9]+\.?[0-9]*) ns total time to execute/\1/p'
+sed '1s/before/after/'                  # replace first line
+sed -rn "s/^.*(PATTERN1).*(PATTERN2).*$/\1\t\2/p" # extract two fields
+tac | sed -n '1,/PATTERN/p' | tac       # print from last match to end of file
+sed '/PATTERN1/s/PATTERN2/PATTERN3/'    # match P1, then apply query-replace
+perl -0pe 's/QUERY/REPLACE/sm'          # multiline regex query-replace
+
+# Misc text processing
+cat FILE1                               # print file to terminal
+cat FILE1 FILE2                         # print files to terminal
+less FILE                               # pager.  q to quit
+pygmentize -g                           # syntax highlighting, autodetect lexer
+cat -n                                  # prepend line numbers
+cut -c8-                                # remove first 8 characters of a line
+fold                                    # word-wrap text
+column -t                               # format columns in tabular data
+column -tns, FILE.csv                   # pretty-print a csv file
+test `tail -c 1 file`                   # test if file ends in newline
+expand                                  # converts tabs into spaces
+tac                                     # reverse order of lines
+rev                                     # reverse order of characters
+paste                                   # print two files side-by-side
+paste <(CMD1) <(CMD2) | column -t       # compare the output of two commands
+tr "\r\n" "\n"  FILE                    # convert line endings to UNIX
+tr -d '[:space:]'                       # remove whitespace
+tr -d -c ',\n' | awk '{print length}'   # count commas
+shuf                                    # shuffle lines
+head                                    # first 10 lines
+head -n2                                # first 2 lines
+head -n-2                               # all but last 2 lines
+tail                                    # last 10 lines
+tail -n2                                # last 2 lines
+tail -n+2                               # from from line 2 to end
+tail -f                                 # monitor file for appends
+wc                                      # word, line, character and byte count
+wc -l                                   # line count
+sort                                    # sort lines
+sort | uniq                             # print only unique lines
+sort -n                                 # numeric order
+sort -u                                 # print only unique lines
+sort -k1                                # sort on column 1 (first)
+sort -k1-2                              # sort on columns 1 and 2
+sort -k1 -t,                            # sort on col 1, comma-delimited
+sort -h                                 # sort human readable, e.g., from du -h
+/usr/share/dict/words                   # All the words in the dictionary
+shuf -n1 /usr/share/dict/words          # random word
+
+# File types and file conversion
+file FILE                               # determine encoding of FILE
+file --mime FILE                        # determine encoding of FILE
+iconv -f UTF-8 -t ASCII//TRANSLIT       # convert UTF8 to ASCII
+recode UTF8..ASCII FILE                 # convert UTF8 to ASCII
+recode ../CR-LF FILE                    # Convert newlines from Unix to DOS
+recode ../Base64 FILE                   # Convert to base64
+recode utf8/Base64..ASCII FILE          # Convert uft8/base64 to ASCII
+fromdos                                 # convert line endings to UNIX
+dos2unix                                # convert line endings to UNIX (old)
+pandoc -t gfm X.html -o X.md            # HTML to GitHub flavored markdown
+convert X.jpg X.png                     # JPG to PNG
+in2csv X.xls > X.csv                    # XLS to CSV
+tidy -im FILE.html                      # Reformat and re-indent HTML file
+
+# CSV files
+cat FILE| head -n1| tr ',' '\n'         # column labels
+cat FILE| head -n1| tr ',' '\n'| cat -n # column labels and numbers
+cat FILE| cut -d, -f1                   # print column 1
+cat FILE| cut -d, -f1-3                 # print first 3 columns
+pip install csvkit                      # install python CSV CLI utilities
+in2csv                                  # xls[x] -> csv
+csvlook                                 # pretty print table
+csvcut -n                               # column labels and numbers
+csvcut -c 2-6                           # print columns 2 - 6
+csvcut -c 2,5,6                         # print columns 2,5,6
+csvcut -c county,quantity               # print columns "county" and "quantity"
+csvcut -c 2-5 | csvlook                 # cut and pretty print
+csvstat                                 # print statistics about each column
+csvgrep -c COLUMN[S] -m PATTERN         # search for PATTERN in column
+csvgrep -c COLUMN[S] -r PATTERN         # search for regex PATTERN in column
+csvsort -c COLUMN[S]                    # sort, keyed on COLUMN[S]
+csvsort -c COLUMN[S] -r                 # ^^^ reverse sort
+csvjoin -c COLUMN A.csv B.csv           # join two files on COLUMN
+csvjoin -cUMID -I                       # join on UMID, with strings match
+csvjoin -cUMID -I --outer roster.csv scantron.csv  # join roster w/ scantron
+csvstack A.csv B.csv                    # stack https://goo.gl/CN8JaI
+csvsql --db sqlite:///DB.db --insert    # CSV -> SQL https://goo.gl/9FMLf1
+csvjson                                 # CSV -> JSON
+csvjson --indent 4                      # CSV -> JSON pretty printed
+csvjson --key COLUMN                    # build JSON lookup table
+csvpy data.csv                          # Launch Python and load CSV reader lib
+csvformat -T                            # CSV -> TSV
+
+# Permissions
+chown USER                              # change owner
+chown USER:GROUP                        # change owner and group
+chown -R USER                           # change owner recursively
+chgrp GROUP                             # change group
+chgrp -R GROUP                          # change group recursively
+chmod -r                                # remove read permissions
+chmod -w                                # remove write permissions
+chmod -x                                # remove execute permissions
+chmod +r                                # add read permissions
+chmod +w                                # add write permissions
+chmod +x                                # add execute permissions
+chmod u-rwx                             # remove rwx access for user
+chmod g-rwx                             # remove rwx access for group
+chmod o-rwx                             # remove rwx access for others
+chmod 777                               # EVERYONE can do EVERYTHING
+find . -type f -exec chmod 600 {}\;     # change permissions for files only
+find . -type d -exec chmod 700 {}\;     # change permissions for dirs only
+umask                                   # view mask for default file permissions
+umask -S                                # ^^^ symbolically
+umask 0077                              # Nobody can r/w my data
+umask 0022                              # Group members can r/w my data
+
+# Hardware and detection
+top                                     # current memory usage
+free                                    # memory only
+cat /proc/cpuinfo                       # CPU information
+cat /proc/meminfo                       # Memory information
+lspci                                   # see PCI devices
+hwinfo                                  # all hardware
+xinput --list                           # see available input devices
+shutdown                                # shut down machine
+reboot                                  # reboot machine
+
+# Converting docs
+enscript FILE.txt -o - | ps2pdf - FILE.pdf  # txt to pdf
+fromdos                                 # convert line endings to UNIX
+dos2unix                                # convert line endings to UNIX (old)
+pdftk PATH/*.pdf cat output output.pdf  # join pages
+pdfjoin *.pdf                           # join pages
+pdfunite *.pdf out.pdf                  # join pages
+pdftk FILE.pdf burst                    # split pages
+pdfseparate FILE 'page-%02d.pdf'        # split pages
+xlhtml                                  # convert excel files
+pdftotext                               # convert pdf to text
+pdftotext -layout                       # convert pdf to text, preserving layout
+pdffonts                                # list fonts in a pdf document
+pdfcrop --margins 0 INFILE OUTFILE      # Remove whitespace around pdf
+textutil -convert txt FILE.rtf          # rtf to txt
+
+# Date and time
+date '+%s'                                        # current time in seconds
+date '+%Y-%m-%d_%H:%M:%S'                         # format 2016-06-20_13:13:19
+date --utc '+%Y-%m-%d_%H%M%S_%Z'                  # format 2016-06-20_131319_UTC
+date --date='Thu Nov  4 09:08:49 EDT 2010' '+%s'  # parse a date and reformat
+date --date="1970-01-01 1187769064 sec GMT"       # Unix time to human
+date --date @1187769064                           # Unix time to human
+TZ='America/Detroit'; export TZ                   # change time zone
+ntpdate europe.pool.ntp.org north-america.pool.ntp.org # sync clock
+
+# File differences
+diff FILE1 FILE2                        # view differences of two files
+diff <(CMD1) <(CMD2)                    # diff the output of two commands (bash)
+diff3 FILE1 FILE2 FILE3                 # diff three files
+sdiff                                   # same as diff --side-by-side
+diff FILE1 FILE2 > patch.txt            # save a patch
+patch < patch.txt                       # apply a patch from a diff
+wdiff FILE1 FILE2                       # diff word-by-word
+wdiff FILE1 FILE2                       # diff word-by-word
+colordiff                               # same as diff, but with color
+diff ... | colordiff                    # colorize diff output
+wdiff ... | colordiff                   # colorize wdiff output
+diff --brief -r DIR1 DIR2               # compare directories recursively
+
+# Shell math
+expr 1 / 2                              # integer only
+let A=1/2                               # integer only
+echo "1 / 2" | bc -l                    # floating point
+dc -e "3 k 1 2 /p"                      # floating point
+sort file1 | uniq                       # unique patterns
+sort file1 file2 | uniq                 # set union
+sort file1 file2 | uniq -d              # set intersection
+sort file1 file2 | uniq -u              # set symmetric difference
+cat FILE | sort | uniq -c               # frequency analysis (histogram)
+factor NUM                              # print prime factors
+st                                      # statistics about a stream of numbers
+
+# Compression
+tar -cjf DIR.tar.bz2 DIR/               # compress directory
+tar -xvjf DIR.tar.bz2                   # decompress directory
+tar -xvjf DIR.tar.bz2 -C DIR            # decompress to target DIR
+tar -xvjOf DIR.tar.bz2                  # cat tarball files to stdout
+tar -tvjf DIR.tar.bz2                   # list contents of tarball
+tar -xvjf DIR.tar.bz2 FILE              # extract FILE from tarball
+tar --disable-copyfile                  # avoid random dot files on OSX
+tar --exclude '*__pycache__*'           # exclude Python temp files
+tar -c --dereference                    # include pointee of symlinks
+zip -r DIR DIR                          # create DIR.zip archive
+zip --encrypt -r DIR DIR                # create encrypted zip archive
+bzip2 FILE.bz2                          # compress a single file
+bzcat FILE.bz2                          # dump compressed file to stdout
+bunzip2 FILE.bz2                        # decompress a single file
+gzip FILE.gz                            # compress a single file
+gunzip FILE.gz                          # decompress a single file
+gunzip -c FILE.gz | ...                 # decompress to stdout
+zcat FILE.gz                            # dump compressed file to stdout
+zgrep FILE.gz                           # grep for compressed files
+zdiff FILE1.gz FILE2.gz                 # diff for compressed files
+cat FILE.txt | gzip -f > FILE.txt.gz    # pipe into gzip
+unzip FILE.zip                          # decompress
+unzip FILE.zip -d DIR                   # decompress to DIR
+
+# Encryption
+encfs ROOTDIR MOUNTPOINT                # (first time) create encrypted virtual folder
+encfs ROOTDIR MOUNTPOINT                # mount
+fusermount -u MOUNTPOINT                # unmount / Linux
+umount MOUNTPOINT                       # unmount / Darwin
+encfsctl passwd ROOTDIR                 # change password
+md5sum                                  # compute hash
+shasum                                  # compute hash
+shasum -a 256                           # compute hash, SHA256
+openssl                                 # CLI to OpenSSL library
+crypto FILE                             # encrypt to FILE.crypt
+decrypto FILE.crypt                     # decrypt to FILE
+shasum -c FILE                          # check SHA hash
+md5sum -c FILE                          # check MD5 hash
+openssl req -newkey rsa:2048 -nodes -x509 -days 365 # generate server key
+openssl req -newkey rsa:4096 -nodes -x509 -days 365 # generate server key, 4096
+openssl s_client -showcerts -connect www.google.com:443  # Show certificate
+zip --encrypt -r DIR DIR                # create encrypted zip archive
+gpg -c FILE                             # encrypt file to FILE.gpg
+gpg --batch --passphrase-file FILE      # read password from FILE
+gpg -o FILE -d FILE.gpg                 # decrypt file
+gpg --search-keys awdeorio              # search for public key
+gpg --search-keys awdeorio --keyserver pool.sks-keyservers.net
+gpg --recv-key KEYID                    # download public key
+gpg --recv-key --keyserver pool.sks-keyservers.net
+gpg --verify FILE.asc                   # verify
+gpg --no-default-keyring \              # circumvent OSX keychain
+    --keyring ./tmp.keyring
+gpg --allow-non-selfsigned-uid          # allow key
+gpg --full-generate-key                 # create GPG public/private key pair
+gpg --secret-keys --keyid-format LONG   # list keys
+gpg -K                                  # list keys
+gpg --armor --export KEYID              # print public key
+gpg --armor --export-secret-keys KEYID  # print private key
+gpg --export -a > ~/allpublickeys.asc   # backup public keys
+gpg --import < ~/allpubkeys.asc         # restore backup of public keys
+gpg --send-keys KEYID                   # Public public key to public keyserver
+gpg --clearsign FILE                    # Sign a message (output incl orig msg)
+gpg --verify FILE.txt.asc               # Verify a signed message
+gpg --detach-sign FILE                  # Sign a file (output doesn't incl file)
+gpg --verify FILE.sig                   # Verify a signed file
+gpg --list-options show-photos --fingerprint awdeorio  # Show key attached photo
+gpgconf --kill gpg-agent                # Stop gpg-agent
+gpgconf --launch gpg-agent              # Start gpg-agent
+gpg --homedir ~/gnupg_tmp/              # Use another GPG config
+gpg --encrypt --recipient you@you.com message.txt  # Sign and seal message.txt
+
+# Virtual terminals
+screen                     # start virtual terminal
+screen -S NAME             # start virtual terminal named NAME
+screen -r NAME             # attach to NAME
+screen -ls                 # list sessions
+[screen] C-a d             # detach
+tmux                       # start virtual terminal
+tmux new -s NAME           # start virtual terminal named NAME
+tmux attach                # attach
+tmux a                     # attach
+tmux a -t NAME             # attach to NAME
+tmux ls                    # list sessions
+tmux kill-session -t NAME  # kill session NAME
+[tmux] C-b d               # detach
+[tmux] C-b 0               # select window 0
+[tmux] C-b n               # next window
+[tmux] C-b p               # previous window
+
+# Meta commands
+watch CMD                  # run CMD over and over
+watch -n0.5 CMD            # run CMD every 0.5s
+tail -f FILE               # watch file for appends
+...|xargs CMD              # run CMD on all lines of input, all at once
+...|xargs -n1 CMD          # run CMD on each line of input, one at a time
+...|xargs -n1 emacs        # launch emacs one at a time for several files
+...|xargs -n1 realpath | xargs -n1 emacs  # ^^^ handle relative file paths
+...|xargs -n10 CMD         # process files in batches on 10
+
+# Cron
+crontab -l                              # display current crontab
+crontab -r                              # remove current crontab
+crontab -e                              # edit current crontab
+/etc/cron.d/                            # cron configs picked up automatically
+/etc/crontab format:
+ +---------------- minute (0 - 59)
+ |  +------------- hour (0 - 23)
+ |  |  +---------- day of month (1 - 31)
+ |  |  |  +------- month (1 - 12)
+ |  |  |  |  +---- day of week (0 - 6) (Sunday=0 or 7)
+ |  |  |  |  |
+ *  *  *  *  *  command to be executed
+
+# Random
+shuf                                    # shuffle lines
+shuf -i 1-100 -n 1                      # Random number between [1, 100]
+dd bs=1M count=1 if=/dev/urandom of=FILE# create a 1M file with random content
+openssl rand -base64 32                 # random string, 32 characters
+echo "USER:`openssl rand -base64 32 | head -c32`" | chpasswd  # ^^^ and set it
+pwgen                                   # random password
+pwgen 16                                # ^^^ with 16 characters
+pwgen -y                                # ^^^ with punctuation
+cat /dev/random| tr -dc A-Za-z0-9       # random string (insecure)
+cat /dev/random|tr -dc a-f0-9|head -c32 # random hex string (insecure)
+
+# OSX
+open FILE                               # open a file, same as double-click
+open -a "Google Chrome" FILE            # open a file with Google Chrome
+pbcopy < FILE                           # copy contents of FILE to clipboard
+echo | pbcopy                           # command output -> clipboard
+opendiff FILE1 FILE2 [-merge FILE3]     # graphical diff
+diskutil unmount /Volumes/USB_DISK      # Unmount USB_DISK
+rm ~/.Trash/*                           # Empty trash
+dseditgroup -o create -u USER -p GROUP  # create GROUP
+dseditgroup -o edit -u USER1 -p -a USER2 -t user GROUP # Add USER2 to GROUP
+
+# Upgrade procedure
+brew update
+brew upgrade
+brew cask upgrade
+brew cleanup
+pip2 install --upgrade pip setuptools wheel
+pip3 install --upgrade pip setuptools wheel
+pip3 install --upgrade jupyter matplotlib pandas numpy scipy grip
+softwareupdate --list
+softwareupdate -i -a
+
+# Homebrew (OSX)
+brew install PACKAGE                    # install PACKAGE
+brew uninstall PACKAGE                  # remove PACKAGE
+brew update                             # update package index
+brew upgrade                            # upgrade installed packages
+brew cleanup                            # remove tarballs, installers, etc.
+brew list                               # list all installed packages
+brew outdated                           # list outdated packages
+brew update                             # update package index (includes cask)
+brew cask upgrade                       # upgrade installed packages
+brew cask cleanup                       # remove .dmg installers
+brew cask install PACKAGE               # install .dmg PACKAGE
+brew cask uninstall PACKAGE             # remove .dmg PACKAGE
+brew cask install https://raw.githubusercontent.com/caskroom/homebrew-cask/e8816187ae43f52b598f15f45b3453e22727ac99/Casks/virtualbox.rb   # Downgrade a .dmg package  https://www.jverdeyen.be/mac/downgrade-brew-cask-application/
+brew cask list                          # list installed packages
+
+# Services
+brew services list                      # list startup services
+brew services [start|stop|restart] SVC  # start/stop/restart SVC
+launchctl unload  /System/Library/LaunchDaemons/ssh.plist  # stop SSH server
+launchctl load  /System/Library/LaunchDaemons/ssh.plist    # start SSH server
+
+# VirtualBox
+vboxmanage list vms                     # list virtual machines
+vboxmanage list runningvms              # list running virtual machines
+vboxmanage startvm NAME                 # start NAME virtual machine
+vboxmanage startvm NAME --type headless # start, headless mode
+vboxmanage controlvm NAME poweroff      # pull plug
+vboxmanage controlvm NAME acpipowerbutton # halt
+vboxmanage unregistervm NAME --delete   # remove
+vboxmanage import FILE.ova              # import OVA
+vboxmanage import FILE.ova --dry-run    # ^^^ just print
+vboxmanage list bridgedifs              # list NICS available for bridging
+vboxmanage modifyvm "VM Name" --bridgeadapter1 "nic name" # change bridged NIC
+
+# Environment Modules
+# http://modules.sourceforge.net/
+module load vscode                      # add software to PATH
+module load vscode/1.19.2               # add specific SW version to PATH
+module unload vscode                    # remove software from PATH
+module switch vscode/1.19.2             # change version
+module list                             # show loaded modules
+module clear                            # clear all loaded modules
+module apropos                          # search module name and description
+module avail -t 2>&1 | grep vscode      # search module name
+
+# C++ compilation
+gcc -Wall -Werror -std=c89 -ansi        # compile ISO C
+g++ -Wall -Werror -pedantic             # compile ISO C++
+g++ -Wall -Werror -pedantic -std=c++11  # compile ISO C++11
+g++ -g                                  # compile with debug support
+g++ -Wfatal-errors                      # stop after one error
+g++ -E FILE.cpp -o FILE.ii              # stop after preprocessing
+g++ -S FILE.ii -o FILE.s                # stop after compilation proper
+g++ -c FILE.s -o FILE.o                 # stop after assembling
+g++ FILE.o -o FILE                      # stop after linking (all done!)
+echo $LD_LIBRARY_PATH                   # run time library resolution
+echo $LIBARY_PATH                       # gcc static library search path, gcc -L
+echo $LD_RUN_PATH                       # gcc link time library resolution
+echo $CPATH                             # gcc search path, gcc -I
+echo $C_INCLUDE_PATH                    # ^^^ for C
+echo $CPLUS_INCLUDE_PATH                # ^^^ for C++
+ldd EXE                                 # show dynamically loaded libraries
+
+# Debug with gdb
+g++ -g                                  # compile
+gdb ./a.out                             # run
+gdb -tui ./a.out                        # run, "CLI-based" GUI
+
+# Debug with lldb
+# Cheat sheet https://lldb.llvm.org/lldb-gdb.html
+g++ --version                           # verify that g++ is really clang
+g++ -g                                  # compile
+lldb ./a.out                            # run
+
+# Dynamic analysis with valgrind
+g++ -g                                  # compile
+valgrind -v --leak-check=full ./a.out   # run
+
+# Coverage with gcov
+# To measure coverage of a suite of unit and system tests, be sure to compile
+# using the separate compilation model.
+g++ --version                           # verify that g++ is GNU, not clang
+g++ -g --coverage FILE.cpp              # compile
+./a.out                                 # run
+gcov FILE.cpp                           # analyze
+grep '^#####' test.cpp.gcov             # show lines that didn't execute
+
+# GNU Make
+make                                    # Build the first target in Makefile
+make -f FILE                            # Use FILE as Makefile
+make -d                                 # Print debugging information
+make -jN                                # Run N parallel jobs
+make -k                                 # Keep going after error, if possible
+make -n                                 # Dry run
+make -r                                 # Eliminate built-in implicit rules
+
+# Binary tools
+# OSX: brew install binutils; then use gobjdump
+strings FILE                            # find printable strings in an object
+objdump -D file.o                       # disassemble
+hexdump                                 # binary -> hex (check endianness!)
+xxd                                     # binary -> hex (check endianness!)
+
+########################################
+# Python
+
+# Options
+python -m MODULE                        # load module and execute main()
+python -c "PROGRAM"                     # execute python program
+
+# Search path for libraries
+echo $PYTHONPATH                        # Add to search path
+echo $PYTHONUSERBASE                    # Base dir, e.g., ${HOME}/.local
+python -c 'import sys; print("\n".join(sys.path))'
+python FILE                             # basedir FILE is add to PYTHONPATH
+
+# Local package installs
+virtualenv venv                         # create
+virtualenv -p python3 venv              # create, Python 3
+python3 -m venv venv                    # create, Python 3
+source ./venv/bin/activate              # enable, bash
+. ./venv/bin/activate                   # enable, csh, etc.
+pip install PACKAGE                     # install PACKAGE into ./venv
+python3 -m pip install PACKAGE          # install PACKAGE into ./venv, Python 3
+deactivate                              # disable
+
+# pipenv
+# Docs: https://docs.pipenv.org/  http://docs.pipenv.org/advanced/
+pip3 install pipenv                     # System-wide pipenv install
+pipenv --where                          # Output project home path
+pipenv --venv                           # Output project virtual env path
+pipenv --three                          # Create virtual environment, Pipfile
+PIPENV_VENV_IN_PROJECT pipenv --three   # ^^^ inside $(pwd)/.venv/
+pipenv install PACKAGE                  # Install PACKAGE into venv
+pipenv uninstall PACKAGE                # Remove PACKAGE from venv
+pipenv shell                            # Activate virtual environment
+pipenv run CMD                          # Run CMD in virtual environment
+
+# pyenv: install different Python versions
+pyenv install --list                    # List available version
+pyenv install 3.6.6                     # Install Python-3.6.6
+pyenv shell 3.6.6                       # Set 3.6.6 as default python temp
+pyenv global 3.6.6                      # Set 3.6.6 as global python version
+
+# Upgrade dependencies
+pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U
+
+# Install virtualenv locally
+pip install --user virtualenv
+./.local/bin/virtualenv
+
+# Fancy debugging
+# https://pypi.python.org/pypi/pdbpp/
+$ pip install pdbpp
+import pdb; pdb.set_trace()
+> sticky
+> pp OBJECT  # pretty-print OBJECT, especially good for lists
+
+# Stop and debug
+>>> import pdb; pdb.set_trace();
+
+# Start a program in debug mode
+python -m pdb script.py
+
+# Start a program in debug mode, inside emacs
+M-x pdb
+Run pdb (like this): python3 -m pdb FILE.py
+
+# Check style
+pycodestyle                             # PEP8 check
+pydoctyle                               # PEP257 check
+pylint FILE                             # Check FILE
+pylint DIR                              # Check all source files in DIR
+pylint --errors-only --reports=n        # Disable full report (only errors)
+pylint --errors-only --reports=n        # Disable full report (only messages)
+
+# Enable tab-completion and history in Python shell.  Add this to ~/.pythonrc.py
+import readline, rlcompleter
+readline.parse_and_bind("tab: complete")
+
+# Python unittest CLI
+python -m unittest MODULE               # Run all tests in MODULE
+python -m unittest MODULE.CLASS         # Run all tests in CLASS
+python -m unittest MODULE.CLASS.FXN     # Run one test function
+
+# Python pytest CLI
+python -m pytest                        # Run all tests
+pytest                                  # Run all tests
+pytest FILE::FXN                        # Run one test function
+pytest FILE::CLASS::FXN                 # Run one test member function
+pytest --pdb                            # Drop to pdb after a failure
+pytest --trace                          # Drop to pdb at beginning of test
+pytest -x                               # Exit on first error
+pytest -s                               # Do not capture stdout
+pytest --runxfail                       # Run tests marked as expected failures
+pytest --last-failed                    # Rerun only tests that failed last run
+pytest --showlocals                     # Dump local variables for debugging
+pytest --reuse-db                       # Reuse test DB
+pytest --create-db                      # Re-create test DB
+
+# JSON
+echo '{"json":"obj"}' | python -m json.tool    # Pretty-print
+echo '{"json":"obj"}' | jq                     # Pretty-print
+echo '{"json":"obj"}' | jsonlint               # Lint
+
+# XML
+# Pretty-print
+cat FILE.xml | python2 -c 'import sys;import xml.dom.minidom;s=sys.stdin.read();print xml.dom.minidom.parseString(s).toprettyxml()'
+
+########################################
+# JavaScript / Node
+
+# Python + JS Virtual Environments
+python3 -m venv env                     # create virtual environment
+source env/bin/activate                 # activate virtual environment
+pip install PACKAGE                     # install Python packages
+pip install nodeenv                     # install node virtual env utility
+nodeenv --python-virtualenv             # install local node and npm
+npm install --global webpack            # install global JS packages
+ls env/lib/node_modules/                # location of global JS packages
+npm install .                           # install local JS package
+webpack                                 # build front end
+webpack --watch                         # continuously build front end
+webpack --display-error-details         # debug frontend build
+
+# npm
+npm install --save-prod PACKAGE         # Install and add to package.json (prod)
+npm install --save-dev PACKAGE          # Install and add to package.json (dev)
+npm update PACKAGE --save               # Upgrade one package
+
+# Update all dependencies in package.json
+npm install --global npm-check-updates
+npm-check-updates --upgrade
+npm-check-updates --upgradeAll
+npm install .
+
+# node
+NODE_DEBUG='*' node test.js             # Enable all debug messages
+NODE_DEBUG=timer node test.js           # Enable only timer debug messages
+node --trace-events-enabled --trace-event-categories node.async_hooks --trace-event-file-pattern log.json test.js  # VERY detailed debug info
+
+########################################
+# SQL
+
+# SQL tid bits
+PRIMARY KEY AUTO_INCREMENT              # avoid initializing ID's
+TIMESTAMP DEFAULT CURRENT_TIMESTAMP     # avoid initializing timestamps
+FOREIGN KEY (child_id)                  # add foreign key constraint to col
+  REFERENCES parent_table(parent_id)    # connect to column in parent table
+  ON UPDATE CASCADE                     # update child rows with parents row
+  ON DELETE CASCADE                     # delete child rows with parents row
+SELECT a.*, b.*                         # 2-way join AKA inner join
+  FROM a JOIN b
+  ON a.id=b.id;
+SELECT a.*, b.*, c.*                    # 3-way join AKA inner join
+  FROM (a JOIN b ON a.id=b.id)
+  JOIN c ON (b.id=c.id);
+SELECT MAX(id) FROM table               # last auto-generated id from table
+SELECT LAST_INSERT_ID()                 # last auto-generated id, globally
+SELECT * FROM table ORDER BY x ASC;     # sort on x, ascending
+SELECT * FROM table ORDER BY x DESC;    # sort on x, descending
+SELECT * FROM table LIMIT 1;            # return one result
+SELECT * FROM table ORDER BY x ASC LIMIT 1  # FIRST
+SELECT * FROM table ORDER BY x DESC LIMIT 1 # LAST
+CREATE DATABASE db;                     # create new database db
+SHOW DATABASES;                         # list all databases
+DROP DATABASE db;                       # delete database
+SHOW CREATE TABLE table;                # print statement to create table
+USE db;                                 # open database db
+SHOW TABLES;                            # list tables in db
+DROP TABLE table;                       # delete table
+DROP TABLE table IF EXISTS table;       # delete table if it exists
+INSERT INTO table (col, ...)            # add a row
+  VALUES ('val', ...);                  # ...
+UPDATE table SET col=val WHERE cond;    # update a row
+DELETE FROM table WHERE column="value"; # remove one row
+DELETE FROM table;                      # remove all rows in table
+GROUP BY
+PARTITION
+RANK
+
+########################################
+# git
+#
+# Lots of good examples https://github.com/k88hudson/git-flight-rules
+
+# One-time setup for a user
+git config --global user.name "Name"    # Your name for author when committing
+git config --global user.email "email"  # email address (global)
+git config user.email "email"           # email address for one project
+git config --global color.diff auto     # colors: git diff
+git config --global color.status auto   # colors: git status
+git config --global color.branch auto   # colors: git branch
+git config --global commit.gpgSign true # Sign commits by default
+git config --global user.signingKey BB6201BA07530070  # which key to sign with
+
+
+# One-time setup for a project
+git clone ssh://USERNAME@SERVER/~/opt/git/PROJECT.git # server
+git clone git@github.com:REPO/PROJECT.git             # github
+git clone https://github.com/REPO/PROJECT.git         # github anonymous
+git init DIR                                          # no server
+
+# Push an existing repository to a remote
+git remote add origin git@github.com:ORGANIZATION/PROJECT.git
+git push -u origin master
+
+# Basic workflow
+git pull                                # update local copy
+$EDITOR FILE                            # work on stuff, modify files
+git add FILE                            # add file to commit
+git status                              # see what's been added or modified
+git commit                              # commit any added files
+git push                                # push changes to server
+
+# Repository setup on a server (without github)
+ssh SERVER                              # alternative: use shared network volume
+mkdir -p ~/opt/git/PROJECT.git          # make directory
+git init --bare ~/opt/git/PROJECT.git   # intialize bare repository
+
+# Repository setup on github
+https://github.com -> "make a new repository"   # Create a new repository
+https://help.github.com/articles/generating-ssh-keys/ # SSH keys
+https://help.github.com/articles/remove-sensitive-data/ # remove sensitive data
+
+# Update your local copy, merging from repository, manual
+git fetch origin                        # fetch from origin
+git fetch --prune                       # remove stale local branches
+git fetch -vp                           # ^^^ + verbose
+git branch                              # check your branch
+git diff master origin/master           # see changes
+git merge origin/master                 # this will be a FF if no local changes
+git rebase origin/master                #
+
+# Forking work flow: merging a pull request
+# https://help.github.com/articles/committing-changes-to-a-pull-request-branch-created-from-a-fork/
+git clone git@github.com:USER/REPO.git  # Clone other USER's fork of the repo
+git remote add upstream git@github.com:awdeorio/mailmerge.git
+git fetch upstream
+
+# Commit
+git branch                              # check your branch
+git status                              # check file modifications
+git add FILE                            # add file to commit
+git commit                              # commit, with a message
+git push                                # push the commit(s) to server
+
+# Undo
+git checkout FILE                       # revert FILE to last checked-in version
+git reset PATH                          # undo git add
+git reset --soft                        # changes to tracked files are discarded
+git reset --soft HEAD~                  # discard commits that aren't pushed
+git reset --hard                        # reset head to COM, files unchanged
+git rm -r --cached PATH                 # undo git add, without removing files
+git clean -fdx --dry-run                # restore to "clean repo", DELETES
+git commit --amend                      # Combine this commit with previous
+git rev-list -n 1 HEAD -- FILE          # 1. Commit of a deleted file
+git checkout COMMIT^ -- FILE            # 2. Recover deleted file
+git revert COMMIT                       # revert COMMIT
+git checkout -f COMMIT -- .             # revert *to* COMMIT
+
+# Temporarily stash work, restoring a clean set of files
+git stash                               # stash current modifications on stack
+git stash list                          # view stash stack
+git stash pop                           # "unstash" top of stack
+
+# Commit only part of a file
+# https://stackoverflow.com/questions/1085162/commit-only-part-of-a-file-in-git
+git add --patch FILE                    # stage part of a file for commit
+git add -N                              # if file isn't in repo, do this first
+git diff --staged                       # check that you staged correct changes
+git reset -p                            # unstage mistakenly added hunks
+git commit -v                           # view commit while you edit commit msg
+
+# Ignore some files (don't version them)
+echo '*~' > .gitignore                  # ignore emacs backup files
+git add .gitignore                      # git should track ignore file itself
+git commit                              # git should track ignore file itself
+git config --global core.excludesfile ~/.gitignore_global  # global gitigore
+
+# History
+git rev-parse HEAD                      # print hash of current commit
+git log                                 # commit history
+git log FILE                            # commit history for one file
+git log --stat                          # show insertions and deletions
+git log --oneline                       # less info
+git log --oneline --decorate --graph --all # more info
+git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold blue)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+git reflog -10                          # See last 10 actions
+
+# Identifying commits
+git rev-parse --abbrev-ref HEAD         # Current branch
+git describe --dirty                    # Repo is clean or dirty
+git rev-parse master                    # Commit hash of master
+git rev-parse origin/master             # Commit hash of repo's master
+git diff-index --quiet HEAD --          # Return non-zero if repo is dirty
+
+# Versions of a file
+git show REV:FILE                       # Old version of file
+git show HEAD^ FILE                     # last committed version
+git show HEAD~4:FILE                    # 4th last commit
+
+# Remote repositories
+git remote                              # list names of remote repositories
+git remote show origin                  # more info
+git remote set-url origin NEW_URL       # change location of repo
+git branch -vv                          # branch remotes
+
+# Branching
+git branch                              # view current and local branches
+git branch -a                           # view all branches
+git branch --all -vv --sort=-committerdate # view branches by recent commit date
+git branch -vv                          # include tracking and commit info
+git checkout BRANCH                     # switch to local BRANCH
+git checkout --track origin/BRANCH      # switch to remote BRANCH
+git checkout -b BRANCH                  # create a new branch and switch to it
+git push origin BRANCH                  # push BRANCH to remote
+git branch --set-upstream-to=origin/BRANCH BRANCH # fix tracking
+git rev-parse --abbrev-ref HEAD         # name of current branch (scriptable)
+
+# Branching Model  http://nvie.com/posts/a-successful-git-branching-model/
+git checkout -b feature/F develop       # start working on a new feature "F"
+git add FILE                            # add files
+git commit                              # commit to branch feature/F
+git fetch                               # get changes to feature/F from repo
+git rebase                              # apply changes from repo
+git push origin feature/F               # push branch to remote
+git checkout develop                    # switch to develop branch
+git merge --no-ff feature/F             # merge F into develop, keep branch info
+git branch -d feature/F                 # delete F branch
+git push origin develop                 # push to server
+git push origin ":feature/F"            # remove F branch from server
+
+# Rename a branch
+git branch -m old_branch new_branch         # Rename branch locally
+git push origin :old_branch                 # Delete the old branch
+git push --set-upstream origin new_branch   # Push the new branch
+
+# Automated branching model
+# https://danielkummer.github.io/git-flow-cheatsheet/
+brew install git-flow-avh               # Install
+git flow init                           # Initialize inside a repository
+git flow feature start NAME             # Start a new feature
+git flow feature finish NAME            # Finish a feature
+git flow feature publish NAME           # Publish a feature
+git flow feature pull origin NAME       # Get feature published by another user
+git flow feature track NAME             # Track a feature on origin
+git flow release start RELEASE          # Start a release
+git flow release publish RELEASE        # Publish a release
+git flow release track RELEASE          # Track a release
+git flow release finish RELEASE         # Finish a release
+git push --tags                         # Push release tags
+git flow hotfix start VERSION           # Start a hotfix
+git flow hotfix finish VERSION          # Finish a hotfix
+
+# Tagging
+git tag                                 # list tags
+git tag TAG                             # apply lightweight tag
+git tag -a TAG                          # apply annotated tag
+git tag -a TAG REV                      # apply annotated tag to REV commit
+git tag --delete TAG                    # delete a local tag
+git push --delete origin TAG            # delete a remote tag
+git push --delete origin TAG            # git push origin :tagname
+git push --tags                         # make tags public
+git checkout tags/TAG                   # checkout a tag as detacted HEAD
+git describe                            # describe commit using most recent tag
+git describe --dirty                    # append "-dirty" if repo isn't clean
+git describe --always                   # use commit object as fallback
+
+# Comparing
+git diff BRANCH1 BRANCH2                # diff two local branches
+git diff master remotes/origin/dataset  # diff two remote branches
+git diff --name-status ref1..ref2       # see what files changed
+git mergetool --tool-help               # list available diff/merge tools
+git config --global diff.tool TOOL      # use TOOL for merging
+git config --global diff.tool --directory TOOL # use TOOL for dir merging, too
+https://github.com/REPO/compare/HASH1...HASH2  # Visualize diff on GitHub
+
+# Merging
+git merge develop                       # merge develop into current branch
+git cherry-pick 62ecb3                  # merge *one* commit into current branch
+git cherry-pick A^..B                   # ^^^ commits A thru B, inclusive
+git checkout --theirs PATH/FILE         # conflict: keep their file
+git checkout --ours PATH/FILE           # conflict: keep my file
+git commit                              # conflict: I'm done, finish merge
+
+# Signing with GPG keys
+gpg -K --keyid-format LONG              # list keys
+git config --global user.signingkey KEY # set key
+export GPG_TTY=$(tty)                   # connect to GPG
+git tag -s TAG                          # create a signed tag
+git tag -v TAG                          # verify signed tag
+git commit -S                           # create a signed commit
+git commit --amend -S                   # sign last commit
+git verify-commit HEAD                  # verify signed commit
+
+# Merging somebody else's fork
+git remote add OTHER_REPO OTHER_URL     # Add additional remote
+git fetch OTHER_REPO                    # Get their changes
+git checkout develop                    # Checkout branch you want to merge into
+git merge --no-ff OTHER_REPO/OTHER_BRANCH  # Merge their changes
+
+# Rebase automatically, resulting in a linear history like Subversion
+# Ref: http://stevenharman.net/git-pull-with-automatic-rebase
+git config branch.autosetuprebase always
+git config branch.develop.rebase true
+git config branch.autosetuprebase always
+
+# Sub modules (a subdir that is another repo)
+git clone --recursive                   # Clone a repo with submodules
+git submodule update --init             # Use if you forgot --recursive
+
+# Tarballs
+git archive --format tar.gz HEAD > file.tar.gz
+git archive --format tar.gz --prefix PREFIX/ --output FILE.tar.gz master
+
+# Tracking large files with git-lfs
+brew install git-lfs                    # install git-lfs step 1
+git lfs install                         # install git-lfs step 2
+git lfs track '*.psd'                   # start tracking .psd files
+git lfs track                           # types of files managed by git-lfs
+git add file.psd                        # (normal git flow)
+git commit -m 'blah'                    # (normal git flow)
+git push origin master                  # (normal git flow)
+git lfs status                          # staged (uncommitted) changes
+git lfs ls-files                        # files managed by git-lfs (committed)
+
+# Render github-style Markdown
+pip install grip                        # install grip utility
+grip -b README.md                       # render README.md in browser
+grip -b --norefresh README.md           # ^^^ limit github API usage
+
+########################################
+# Nasty things
+rm -rf /                               # Delete everything
+:(){ :|: & };:                         # Fork bomb (bash)
+COMMAND > /dev/sda                     # Write directly to HDD
+dd if=/dev/random of=/dev/sda          # Write junk to HDD
+mv ~ /dev/null                         # Move home directory to nowhere
+
+# Password cracking demo
+openssl passwd -1 -salt xyz "password" > passwd.txt
+john --show passwd.txt
+$ cat ~/.john/john.pot
+$1$xyz$cEUv8aN9ehjhMXG/kSFnM1:password
+
+########################################
+# Command line fun
+cowthink                               # ascii art of a fow w/ thought bubble
+cowsay STRING                          # ascii art of a cow w/ speech bubble
+cowsay -f tux                          # ^^^ penguin
+cowsay -l                              # list characters
+fortune                                # print a random adage
+fortune | cowsay                       # ascii art + random adage
+sl                                     # steam locomotive
+asciiquarium                           # ascii art animated aquarium
+telnet towel.blinkenlights.nl          # ascii animated Start Wars C-] to quit
+rig                                    # generate random fake identities
+rev <<< "go hang a salami im a lasagna hog" # palindrome
+figlet STRING                          # print ascii bubble text
+lolcat                                 # rainbow colors (gem install lolcat)
+curl http://wttr.in/ann_arbor          # ascii weather report
+curl wttr.in/:help                     # ascii weather report help
+curl wttr.in?0                         # ascii weather report, only current
+curl wttr.in?n                         # ascii weather report, narrow width

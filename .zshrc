@@ -6,6 +6,15 @@ export ZSH="/Users/keenantullis/.oh-my-zsh"
 
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
+# todoist cli (https://github.com/sachaos/todoist)
+source "$HOME/.oh-my-zsh/custom/todoist_function.sh"
+
+# nvm sruff
+export NVM_DIR="$HOME/.nvm"
+NVM_HOMEBREW="/usr/local/opt/nvm/nvm.sh"
+[ -s "$NVM_HOMEBREW" ] && \. "$NVM_HOMEBREW"
+[ -x "$(command -v npm)" ] && export NODE_PATH=$NODE_PATH:`npm root -g`
+
 ### Git customization #########################################################
 alias gs='git status'
 alias gd='git diff'
@@ -14,9 +23,6 @@ alias gf='git fetch -p'
 
 # Alias "g" to "git" and don't break bash completion
 alias g=git
-complete -o bashdefault -o default -o nospace -F _git g 2>/dev/null \
-  || complete -o default -o nospace -F _git g
-
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -76,7 +82,11 @@ ZSH_THEME="theunraveler"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(
+    git
+    zsh-syntax-highlighting
+    zsh-autosuggestions
+)
 
 source $ZSH/oh-my-zsh.sh
 

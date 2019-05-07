@@ -75,6 +75,9 @@ else
     set ttymouse=xterm2
 end
 
+" https://thoughtbot.com/blog/how-to-copy-and-paste-with-tmux-on-mac-os-x
+set clipboard=unnamed
+
 " https://thoughtbot.com/blog/vim-splits-move-faster-and-more-naturally
 set splitbelow
 set splitright
@@ -247,11 +250,21 @@ if $COLORTERM == 'gnome-terminal'
 endif
 
 try
-    colorscheme onedark
+    let g:seoul256_background = 233
+    colorscheme seoul256
+    " colorscheme dracula
+    " let g:alduin_Shout_Dragon_Aspect = 1
+    " colorscheme alduin
+    " let g:ayucolor="dark"
+    " colorscheme ayu
+    " colorscheme zenburn
+    " colorscheme base16-default-dark
+    " colorscheme gruvbox
+    " colorscheme onedark
 catch
 endtry
 
-set background=dark
+" set background=dark
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -345,7 +358,6 @@ let g:lasttab = 1
 nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
 au TabLeave * let g:lasttab = tabpagenr()
 
-
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
 map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
@@ -363,6 +375,31 @@ endtry
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+" https://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
+if exists('$TMUX')
+      function! TmuxOrSplitSwitch(wincmd, tmuxdir)
+              let previous_winnr = winnr()
+                  silent! execute "wincmd " . a:wincmd
+                      if previous_winnr == winnr()
+                                call system("tmux select-pane -" . a:tmuxdir)
+                                      redraw!
+                                          endif
+                                            endfunction
+
+                                              let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
+                                                let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
+                                                  let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
+
+                                                    nnoremap <silent> <C-h> :call TmuxOrSplitSwitch('h', 'L')<cr>
+                                                      nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
+                                                        nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
+                                                          nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
+                                                      else
+                                                            map <C-h> <C-w>h
+                                                              map <C-j> <C-w>j
+                                                                map <C-k> <C-w>k
+                                                                  map <C-l> <C-w>l
+                                                              endif
 
 """"""""""""""""""""""""""""""
 " => Status line
@@ -449,6 +486,13 @@ map <leader>tm :tabmove
 " Super useful when editing files in the same directory
 imap <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
+" YouCompleteMe
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_min_num_of_chars_for_completion = 1
+" http://blog.jobbole.com/58978/
+nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
@@ -503,4 +547,20 @@ function! VisualSelection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 
+
+func! WordProcessorMode() 
+    set textwidth=0
+    set wrap linebreak nolist
+    setlocal formatoptions=1 
+    setlocal noexpandtab 
+    nnoremap j gj 
+    map k gk
+    setlocal spell spelllang=en_us 
+    set thesaurus+=/Users/sbrown/.vim/thesaurus/mthesaur.txt
+    set complete+=s
+    set formatprg=par
+    setlocal wrap 
+    setlocal linebreak 
+endfu 
+com! WP call WordProcessorMode()
 

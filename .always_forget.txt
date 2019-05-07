@@ -46,6 +46,7 @@ cd                                      # change to home directory
 cd ..                                   # change to directory up
 cd DIR                                  # change to directory
 cd -                                    # return to previous directory (bash)
+cd !$                                   # cd to last arg of previous command
 cd $(dirname "$BASH_SOURCE") && pwd -P  # absolute path of sourced bash script
 cd $(dirname $0) && pwd -P              # absolute path of executed bash script
 realpath DIR                            # absolute path of DIR
@@ -309,6 +310,8 @@ seq 10 | xargs -n1 echo "hello"         # do something N times (see also {1..N})
 printf                                  # C-workalike print function
 
 # Bash shell scripting
+export variable                         # exports var to env of all children
+source filename                         # like c include for bash
 echo "hello world"                      # print stdout
 echo "hello world" >&2                  # print to stderr
 echo "hello world" > FILE               # print file
@@ -338,10 +341,11 @@ exec 2<&-                               # close stderr file descriptor
 exec 1<>LOG_FILE                        # open stdout as LOG_FILE file for r/w
 exec 2>&1                               # redirect stderr to stdout
 echo "this goes to LOG_FILE, not screen # (after above 4 exec commands)
-$#                                      # argc in bash
+$#                                      # argc (minus one) in bash
 [ $# -lt 1 ] && exit 1                  # check # args and quit
 $@                                      # argv in bash
 $0                                      # argv[0] in bash
+shift                                   # shift args to left (pop first arg)
 set -o verbose                          # echo commands to stdout
 cd $(dirname "$BASH_SOURCE") && pwd -P  # absolute path of sourced script
 eval                                    # run in current shell
@@ -402,6 +406,7 @@ grep -E '(PATTERN1|PATTERN2)'           # two patterns
 egrep PATTERN                           # extended regex
 grep -o                                 # only print the matched pattern
 grep -v                                 # invert match
+grep -i                                 # ignore case
 grep -Ev '(PATTERN1|PATTERN2)'          # invert two matches
 grep -A10                               # print match + 10 lines after
 grep -B10                               # print match + 10 lines before
@@ -1240,6 +1245,7 @@ git describe --always                   # use commit object as fallback
 git diff BRANCH1 BRANCH2                # diff two local branches
 git diff master remotes/origin/dataset  # diff two remote branches
 git diff --name-status ref1..ref2       # see what files changed
+git diff --staged                       # diff files in staging area
 git mergetool --tool-help               # list available diff/merge tools
 git config --global diff.tool TOOL      # use TOOL for merging
 git config --global diff.tool --directory TOOL # use TOOL for dir merging, too
@@ -1298,6 +1304,24 @@ git lfs ls-files                        # files managed by git-lfs (committed)
 pip install grip                        # install grip utility
 grip -b README.md                       # render README.md in browser
 grip -b --norefresh README.md           # ^^^ limit github API usage
+
+######################################
+# Vim
+
+# spell
+]/[s                                    # move to next/prev misspelling
+z=                                      # spellcheck suggestions
+zg                                      # add word as 'good word' to spellfile
+zG                                      # zg for only this vim session
+zw                                      # like zg but for 'wrong word'
+
+#######################################
+# LaTeX
+#
+# List of symbols: https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols
+
+$\textrm{..}$                           # "normal text" in math mode
+$\lim_{n \to \infty}$                   # limit as n approaches infinity
 
 ########################################
 # Nasty things

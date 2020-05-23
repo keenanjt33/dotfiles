@@ -1308,12 +1308,14 @@ grip -b --norefresh README.md           # ^^^ limit github API usage
 ######################################
 # Vim
 
+"<char>y                                # yank selected text to reg <char>
 # spell
 ]/[s                                    # move to next/prev misspelling
 z=                                      # spellcheck suggestions
 zg                                      # add word as 'good word' to spellfile
 zG                                      # zg for only this vim session
 zw                                      # like zg but for 'wrong word'
+:set (no)paste                          # so indenting isn't wonky on pastes
 
 #######################################
 # LaTeX

@@ -28,7 +28,12 @@ alias g=git
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="theunraveler"
+# ZSH_THEME="theunraveler"
+# ZSH_THEME="geometry/geometry"
+# ZSH_THEME="miekg/lean"
+
+# https://github.com/itchyny/lightline.vim
+export TERM=xterm-256color
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -77,6 +82,7 @@ ZSH_THEME="theunraveler"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -86,6 +92,7 @@ plugins=(
     git
     zsh-syntax-highlighting
     zsh-autosuggestions
+    lean
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -98,7 +105,7 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-export EDITOR='vim'    
+export EDITOR='nvim'    
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
 # else
@@ -111,6 +118,10 @@ export EDITOR='vim'
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+export FZF_COMPLETION_TRIGGER='##' # change ** to whatever you like
+
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -119,3 +130,36 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+bindkey "ç" fzf-cd-widget
+
+alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
+
+alias n='cd ~/Documents/notes'
+
+if type nvim > /dev/null 2>&1; then
+  alias vim='nvim'
+fi
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+function homestead() {
+    ( cd ~/Homestead && vagrant $* )
+}
+
+removecontainers() {
+    docker stop $(docker ps -aq)
+    docker rm $(docker ps -aq)
+}
+
+armageddon() {
+    removecontainers
+    docker network prune -f
+    docker rmi -f $(docker images --filter dangling=true -qa)
+    docker volume rm $(docker volume ls --filter dangling=true -q)
+    docker rmi -f $(docker images -qa)
+}
+
+

@@ -14,7 +14,6 @@ call vundle#begin()
 "call vundle#begin('~/some/path/here')
 "
 
-
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
@@ -26,8 +25,6 @@ Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 Plugin 'scrooloose/nerdcommenter'
 
-Plugin 'shime/vim-livedown'
-
 Plugin 'godlygeek/tabular'
 
 Plugin 'plasticboy/vim-markdown'
@@ -38,6 +35,25 @@ Plugin 'flazz/vim-colorschemes'
 
 Plugin 'amix/vim-zenroom2'
 
+Plugin 'pangloss/vim-javascript'
+
+Plugin 'leshill/vim-json'
+
+Plugin 'mxw/vim-jsx'
+
+Plugin 'tpope/vim-surround'
+
+Plugin 'ctrlpvim/ctrlp.vim'
+
+Plugin 'itchyny/lightline.vim'
+
+Plugin 'w0rp/ale'
+
+Plugin 'vimwiki/vimwiki'
+
+Plugin 'craigemery/vim-autotag'
+
+Plugin 'lumiliet/vim-twig'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -64,7 +80,7 @@ highlight ColorColumn ctermbg=235 guibg=#2c2d27
 :imap jj <Esc>
 :set rnu
 " http://vim.wikia.com/wiki/Insert_newline_without_entering_insert_mode 
-nmap <S-Enter> O<Esc>
+nmap <S-CR> O<Esc>
 nmap <CR> o<Esc>
 
 " https://stackoverflow.com/questions/32103591/vim-cant-scroll-in-iterm2
@@ -106,6 +122,42 @@ let g:NERDTrimTrailingWhitespace = 1
 " Enable NERDCommenterToggle to check all selected lines is commented or not 
 let g:NERDToggleCheckAllLines = 1
 
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+let g:ctrlp_working_path_mode = 'ra'
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|\v[\/](node_modules|target|dist)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+
+let g:ale_fixers = {
+\  'javascript': ['eslint'],
+\}
+
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 0
+
+let g:ctrlp_show_hidden = 1
+
+let g:vimwiki = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
+
+let g:vimwiki_school = [{'path': '~/vimwiki_school/', 'syntax': 'markdown', 'ext': '.md'}]
+
+" let g:vimwiki_list = [vimwiki, vimwiki_school]
+
+let g:vimwiki_list = [
+                        \{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'},
+                        \{'path': '~/vimwiki_school/', 'syntax': 'markdown', 'ext': '.md'}
+                    \]
+
 " Apply YCM FixIt (https://gergap.wordpress.com/2015/08/11/ycm-fixit-feature/) 
 map <F9> :YcmCompleter FixIt<CR>
 
@@ -141,6 +193,7 @@ map <F9> :YcmCompleter FixIt<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " Sets how many lines of history VIM has to remember
 set history=500
 
@@ -174,6 +227,9 @@ let $LANG='en'
 set langmenu=en
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
+
+" Search down into subfolders for file tab-complete
+set path=**
 
 " Turn on the Wild menu
 set wildmenu
@@ -249,6 +305,10 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
+if !has('gui_running')
+  set t_Co=256
+endif
+
 try
     let g:seoul256_background = 233
     colorscheme seoul256
@@ -261,6 +321,7 @@ try
     " colorscheme base16-default-dark
     " colorscheme gruvbox
     " colorscheme onedark
+    " inspo: http://vimcolors.com/?utf8=✓&bg=dark&colors=gui&order=oldest
 catch
 endtry
 
@@ -302,6 +363,9 @@ set smarttab
 " 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
+
+autocmd FileType html setlocal ts=2 sts=2 sw=2
+autocmd FileType html.twig setlocal ts=2 sts=2 sw=2
 
 " Linebreak on 500 characters
 set lbr
@@ -377,29 +441,30 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 " https://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
 if exists('$TMUX')
-      function! TmuxOrSplitSwitch(wincmd, tmuxdir)
-              let previous_winnr = winnr()
-                  silent! execute "wincmd " . a:wincmd
-                      if previous_winnr == winnr()
-                                call system("tmux select-pane -" . a:tmuxdir)
-                                      redraw!
-                                          endif
-                                            endfunction
+  function! TmuxOrSplitSwitch(wincmd, tmuxdir)
+    let previous_winnr = winnr()
+    silent! execute "wincmd " . a:wincmd
+    if previous_winnr == winnr()
+      call system("tmux select-pane -" . a:tmuxdir)
+      redraw!
+    endif
+  endfunction
 
-                                              let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
-                                                let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
-                                                  let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
+  let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
+  let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
+  let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
 
-                                                    nnoremap <silent> <C-h> :call TmuxOrSplitSwitch('h', 'L')<cr>
-                                                      nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
-                                                        nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
-                                                          nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
-                                                      else
-                                                            map <C-h> <C-w>h
-                                                              map <C-j> <C-w>j
-                                                                map <C-k> <C-w>k
-                                                                  map <C-l> <C-w>l
-                                                              endif
+  nnoremap <silent> <C-h> :call TmuxOrSplitSwitch('h', 'L')<cr>
+  nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
+  nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
+  nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
+else
+  map <C-h> <C-w>h
+  map <C-j> <C-w>j
+  map <C-k> <C-w>k
+  map <C-l> <C-w>l
+endif
+
 
 """"""""""""""""""""""""""""""
 " => Status line
@@ -407,8 +472,12 @@ if exists('$TMUX')
 " Always show the status line
 set laststatus=2
 
+let g:lightline = {
+      \ 'colorscheme': 'seoul256',
+      \ }
+
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -460,6 +529,23 @@ map <leader>s? z=
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" use fzf
+set rtp+=/usr/local/opt/fzf
+
+" https://thoughtbot.com/blog/faster-grepping-in-vim
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+
 " Remove the Windows ^M - when the encodings gets messed up
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
@@ -564,3 +650,4 @@ func! WordProcessorMode()
 endfu 
 com! WP call WordProcessorMode()
 
+command! MakeTags !ctags -R .

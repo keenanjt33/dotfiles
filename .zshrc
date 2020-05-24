@@ -2,12 +2,12 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/keenantullis/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 # todoist cli (https://github.com/sachaos/todoist)
-source "$HOME/.oh-my-zsh/custom/todoist_function.sh"
+# source "$HOME/.oh-my-zsh/custom/todoist_function.sh"
 
 # nvm sruff
 export NVM_DIR="$HOME/.nvm"

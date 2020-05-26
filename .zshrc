@@ -1,5 +1,6 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:$HOME/Library/Python/3.7/bin:$PATH:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -121,6 +122,7 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 export FZF_COMPLETION_TRIGGER='##' # change ** to whatever you like
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
+
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh

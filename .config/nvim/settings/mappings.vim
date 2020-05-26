@@ -1,3 +1,5 @@
+let mapleader = ","
+
 :imap jk <Esc>
 :imap kj <Esc>
 :imap jj <Esc>
@@ -11,14 +13,19 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" FZF.vim
-map <C-f> :Files<CR>
+nnoremap <space>. :e ~/.config/nvim/init.vim<CR>
+
+" === fzf === "
+nnoremap<C-f> :Files<CR>
+nnoremap <leader>: :History:<CR>
 map <leader>b :Buffers<CR>
 nnoremap <leader>g :Rg<CR>
-nnoremap <leader>t :Tags<CR>
+nnoremap <leader>T :Tags<CR>
 nnoremap <leader>m :Marks<CR>
-
-nnoremap <C-n> :NERDTreeToggle<CR>
+nmap <leader>l :BLines<CR>
+nmap <leader>L :Lines<CR>
+nmap <leader>C :Commands<CR>
+nmap <Leader>M :Maps<CR>
 
 " === coc.nvim === "
 " Use tab for trigger completion with characters ahead and navigate.
@@ -106,31 +113,9 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
-map <c-space> ?
-
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
 
@@ -146,15 +131,12 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
 
-map <leader>l :bnext<cr>
-map <leader>h :bprevious<cr>
-
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove 
-map <leader>t<leader> :tabnext 
+map <leader>t<leader> :tabnext<cr>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -227,13 +209,17 @@ map <leader>x :e ~/buffer.md<cr>
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
 
-" https://github.com/amix/vim-zenroom2
-nnoremap <silent> <leader>z :Goyo<cr>
+" === coc-snippets === "
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
 
-" === fzf.nvim === "
-" This is the default extra key bindings
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
+" === ranger === "
+" nmap <space>r :RnvimrToggle<CR>
 
+" === which-key === "
+nnoremap <silent> <space> :silent WhichKey '<Space>'<CR>
+vnoremap <silent> <space> :silent <c-u> :silent WhichKeyVisual '<Space>'<CR>

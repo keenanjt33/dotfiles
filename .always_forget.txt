@@ -399,6 +399,12 @@ echo !$:e                               # Remove all but the suffix
 fg                                      # Restart command in foreground
 bg                                      # Restart command in background
 
+# fzf
+[Ctrl-t]                                # paste selected files onto terminal
+[Ctrl-r]                                # paste selected command from history
+[Alt-c]                                 # cd into selected directory
+<completion-trigger><tab>
+
 # grep
 grep PATTERN                            # search for pattern
 grep -E PATTERN                         # extended regex
@@ -1316,6 +1322,9 @@ zg                                      # add word as 'good word' to spellfile
 zG                                      # zg for only this vim session
 zw                                      # like zg but for 'wrong word'
 :set (no)paste                          # so indenting isn't wonky on pastes
+;                                       # Repeat latest f, t, F or T [count] times
+,                                       # Reverse of ;
+:verbose imap <key combo>               # see mappings for <key combo>
 
 #######################################
 # LaTeX

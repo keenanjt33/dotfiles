@@ -398,6 +398,10 @@ echo !$:e                               # Remove all but the suffix
 [Ctrl + z]                              # Suspend command
 fg                                      # Restart command in foreground
 bg                                      # Restart command in background
+zsh -x 2>zsh.trace                      # List alias definition locations
+
+# zsh
+bindkey                                 # list all shell keybindings
 
 # fzf
 [Ctrl-t]                                # paste selected files onto terminal

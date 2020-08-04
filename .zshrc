@@ -94,6 +94,7 @@ plugins=(
     zsh-syntax-highlighting
     zsh-autosuggestions
     lean
+    z
 )
 
 source $ZSH/oh-my-zsh.sh

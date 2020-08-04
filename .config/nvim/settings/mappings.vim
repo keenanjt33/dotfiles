@@ -1,7 +1,5 @@
 let mapleader = ","
 
-:imap jk <Esc>
-:imap kj <Esc>
 :imap jj <Esc>
 
 " Fast saving

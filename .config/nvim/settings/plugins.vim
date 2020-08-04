@@ -30,6 +30,8 @@ call plug#begin()
     Plug 'sheerun/vim-polyglot'
     Plug 'voldikss/vim-floaterm'
     Plug 'liuchengxu/vim-which-key'
+    Plug 'alvan/vim-closetag'
+
 
 call plug#end()            " required
 
@@ -365,3 +367,16 @@ let g:which_key_map.t = {
       \ 'y' : [':FloatermNew ytop'                              , 'ytop'],
       \ }
 call which_key#register('<Space>', "g:which_key_map")
+
+" === alvan/vim-closetag === "
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.js'
+" let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js'
+" let g:closetag_filetypes = 'html,xhtml,phtml'
+" let g:closetag_xhtml_filetypes = 'xhtml,jsx,javascript'
+" let g:closetag_emptyTags_caseSensitive = 1
+" let g:closetag_regions = {
+"     \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+"     \ 'javascript.jsx': 'jsxRegion',
+"     \ }
+" let g:closetag_shortcut = '>'
+" let g:closetag_close_shortcut = '<leader>>'

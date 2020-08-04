@@ -16,3 +16,5 @@ alias gf='git fetch -p'
 alias g=git
 complete -o bashdefault -o default -o nospace -F _git g 2>/dev/null \
   || complete -o default -o nospace -F _git g
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

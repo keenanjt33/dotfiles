@@ -48,3 +48,7 @@ log/
 venv
 node_modules
 .sass-cache
+
+# keys
+
+.ssh/id_*

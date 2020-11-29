@@ -14,7 +14,6 @@ call plug#begin()
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'itchyny/lightline.vim'
     Plug 'w0rp/ale'
-    Plug 'craigemery/vim-autotag'
     Plug 'lumiliet/vim-twig'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -22,7 +21,6 @@ call plug#begin()
     Plug 'airblade/vim-rooter'
     Plug 'mhinz/vim-signify'
     Plug 'tpope/vim-fugitive'
-    Plug 'tpope/vim-rhubarb'
     Plug 'junegunn/gv.vim'
     Plug 'honza/vim-snippets'
     Plug 'unblevable/quick-scope'
@@ -32,7 +30,8 @@ call plug#begin()
     Plug 'voldikss/vim-floaterm'
     Plug 'liuchengxu/vim-which-key'
     Plug 'alvan/vim-closetag'
-
+    Plug 'dstein64/vim-startuptime'
+    Plug 'ludovicchabant/vim-gutentags'
 
 call plug#end()            " required
 

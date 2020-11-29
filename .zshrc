@@ -5,6 +5,8 @@ export PATH=$HOME/bin:$HOME/Library/Python/3.7/bin:$PATH:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+export PATH=$PATH:'/usr/local/go/bin'
+
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 alias py='python3.7'
@@ -168,21 +170,24 @@ fi
 #
 # zgen load miekg/lean
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-function homestead() {
-    ( cd ~/Homestead && vagrant $* )
-}
+# function homestead() {
+#     ( cd ~/Homestead && vagrant $* )
+# }
+#
+# removecontainers() {
+#     docker stop $(docker ps -aq)
+#     docker rm $(docker ps -aq)
+# }
+#
+# armageddon() {
+#     removecontainers
+#     docker network prune -f
+#     docker rmi -f $(docker images --filter dangling=true -qa)
+#     docker volume rm $(docker volume ls --filter dangling=true -q)
+#     docker rmi -f $(docker images -qa)
+# }
 
-removecontainers() {
-    docker stop $(docker ps -aq)
-    docker rm $(docker ps -aq)
-}
-
-armageddon() {
-    removecontainers
-    docker network prune -f
-    docker rmi -f $(docker images --filter dangling=true -qa)
-    docker volume rm $(docker volume ls --filter dangling=true -q)
-    docker rmi -f $(docker images -qa)
-}
+export GOPATH=$HOME/gopath
+export PATH=$GOPATH:$GOPATH/bin:$PATH

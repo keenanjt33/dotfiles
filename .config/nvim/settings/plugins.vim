@@ -42,7 +42,8 @@ call plug#end()            " required
 let g:polyglot_disabled = ['markdown']
 let g:markdown_fenced_languages = ['bash=sh', 'css', 'django', 'javascript', 'js=javascript', 'json=javascript', 'perl', 'php', 'python', 'ruby', 'sass', 'xml', 'html', 'vim']
 
-let g:coc_node_path = '/Users/keenantullis/.nvm/versions/node/v14.3.0/bin/node'
+" let g:coc_node_path = '/Users/keenantullis/.nvm/versions/node/v14.3.0/bin/node'
+let g:coc_node_path = '/usr/bin/node'
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1

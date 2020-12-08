@@ -1,3 +1,5 @@
+" let g:polyglot_disabled = ['markdown']
+
 call plug#begin()
 
     Plug 'scrooloose/nerdcommenter'
@@ -12,8 +14,6 @@ call plug#begin()
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'itchyny/lightline.vim'
     Plug 'w0rp/ale'
-    Plug 'vimwiki/vimwiki'
-    Plug 'craigemery/vim-autotag'
     Plug 'lumiliet/vim-twig'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -21,7 +21,6 @@ call plug#begin()
     Plug 'airblade/vim-rooter'
     Plug 'mhinz/vim-signify'
     Plug 'tpope/vim-fugitive'
-    Plug 'tpope/vim-rhubarb'
     Plug 'junegunn/gv.vim'
     Plug 'honza/vim-snippets'
     Plug 'unblevable/quick-scope'
@@ -31,7 +30,8 @@ call plug#begin()
     Plug 'voldikss/vim-floaterm'
     Plug 'liuchengxu/vim-which-key'
     Plug 'alvan/vim-closetag'
-
+    Plug 'dstein64/vim-startuptime'
+    Plug 'ludovicchabant/vim-gutentags'
 
 call plug#end()            " required
 
@@ -39,7 +39,8 @@ call plug#end()            " required
 " => Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:polyglot_disabled = ['markdown']
+" let g:tmuxline_theme = 'seoul256'
+
 let g:markdown_fenced_languages = ['bash=sh', 'css', 'django', 'javascript', 'js=javascript', 'json=javascript', 'perl', 'php', 'python', 'ruby', 'sass', 'xml', 'html', 'vim']
 
 " let g:coc_node_path = '/Users/keenantullis/.nvm/versions/node/v14.3.0/bin/node'
@@ -84,16 +85,6 @@ let g:ctrlp_custom_ignore = {
 " let g:ale_lint_on_text_changed = 0
 
 let g:ctrlp_show_hidden = 1
-
-let g:vimwiki = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.wiki'}]
-
-let g:vimwiki_school = [{'path': '~/vimwiki_school/', 'syntax': 'markdown', 'ext': '.wiki'}]
-
-let g:vimwiki_list = [
-                        \{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.wiki'},
-                        \{'path': '~/vimwiki_school/', 'syntax': 'markdown', 'ext': '.wiki'}
-                    \]
-
 
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 let g:fzf_tags_command = 'ctags -R'
@@ -195,8 +186,8 @@ augroup END
 let g:qs_max_chars=150
 
 " === ranger === "
-let g:rnvimr_ex_enable = 1
-let g:rnvimr_pick_enable = 1
+" let g:rnvimr_ex_enable = 1
+" let g:rnvimr_pick_enable = 1
 
 " === floaterm === "
 let g:floaterm_keymap_toggle = '<F1>'
@@ -230,7 +221,7 @@ let g:which_key_map['/'] = [ '<Plug>NERDCommenterToggle'  , 'comment' ]
 let g:which_key_map['e'] = [ ':CocCommand explorer'       , 'explorer' ]
 let g:which_key_map['f'] = [ ':Files'                     , 'search files' ]
 let g:which_key_map['h'] = [ '<C-W>s'                     , 'split below']
-let g:which_key_map['r'] = [ ':RnvimrToggle<CR>'          , 'ranger' ]
+" let g:which_key_map['r'] = [ ':RnvimrToggle<CR>'          , 'ranger' ]
 let g:which_key_map['T'] = [ ':Rg'                        , 'search text' ]
 let g:which_key_map['v'] = [ '<C-W>v'                     , 'split right']
 let g:which_key_map['z'] = [ 'Goyo'                       , 'zen' ]
@@ -363,10 +354,10 @@ let g:which_key_map.t = {
       \ 'n' : [':FloatermNew node'                              , 'node'],
       \ 'N' : [':FloatermNew nnn'                               , 'nnn'],
       \ 'p' : [':FloatermNew python'                            , 'python'],
-      \ 'r' : [':FloatermNew ranger'                            , 'ranger'],
       \ 't' : [':FloatermToggle'                                , 'toggle'],
       \ 'y' : [':FloatermNew ytop'                              , 'ytop'],
       \ }
+      " \ 'r' : [':FloatermNew ranger'                            , 'ranger'],
 call which_key#register('<Space>', "g:which_key_map")
 
 " === alvan/vim-closetag === "

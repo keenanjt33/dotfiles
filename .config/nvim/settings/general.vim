@@ -10,8 +10,18 @@ highlight ColorColumn ctermbg=235 guibg=#2c2d27
 
 set rnu
 
-" https://thoughtbot.com/blog/how-to-copy-and-paste-with-tmux-on-mac-os-x
-set clipboard=unnamed
+set clipboard=unnamedplus
+" let g:clipboard = 
+"       \   'name': 'xclip-custom',
+"       \   'copy': {
+"       \      '+': 'xclip -quiet -i -selection clipboard',
+"       \      '*': 'xclip -quiet -i -selection primary',
+"       \    },
+"       \   'paste': {
+"       \      '+': 'xclip -o -selection clipboard',
+"       \      '*': 'xclip -o -selection primary',
+"       \   },
+"       \ }
 
 set splitbelow
 set splitright

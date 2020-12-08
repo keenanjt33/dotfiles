@@ -5,7 +5,11 @@ export PATH=$HOME/bin:$HOME/Library/Python/3.7/bin:$PATH:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+export PATH=$PATH:'/usr/local/go/bin'
+
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+
+alias py='python3.7'
 
 # todoist cli (https://github.com/sachaos/todoist)
 # source "$HOME/.oh-my-zsh/custom/todoist_function.sh"
@@ -95,6 +99,7 @@ plugins=(
     zsh-autosuggestions
     lean
     z
+    fzf
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -120,6 +125,7 @@ export EDITOR='nvim'
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+# source /usr/share/fzf/key-bindings.zsh
 export FZF_COMPLETION_TRIGGER='##' # change ** to whatever you like
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
@@ -136,9 +142,7 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-bindkey "ç" fzf-cd-widget
-
-alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
+# alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 
 alias n='cd ~/Documents/notes'
 
@@ -146,23 +150,44 @@ if type nvim > /dev/null 2>&1; then
   alias vim='nvim'
 fi
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# # load zgen
+# source "${HOME}/.zgen/zgen.zsh"
+#
+# # if the init script doesn't exist
+# if ! zgen saved; then
+#
+#     # specify plugins here
+#     zgen oh-my-zsh
+#     git
+#     zsh-syntax-highlighting
+#     zsh-autosuggestions
+#     lean
+#     z
+#
+#     # generate the init script from plugins above
+#     zgen save
+# fi
+#
+# zgen load miekg/lean
 
-function homestead() {
-    ( cd ~/Homestead && vagrant $* )
-}
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-removecontainers() {
-    docker stop $(docker ps -aq)
-    docker rm $(docker ps -aq)
-}
+# function homestead() {
+#     ( cd ~/Homestead && vagrant $* )
+# }
+#
+# removecontainers() {
+#     docker stop $(docker ps -aq)
+#     docker rm $(docker ps -aq)
+# }
+#
+# armageddon() {
+#     removecontainers
+#     docker network prune -f
+#     docker rmi -f $(docker images --filter dangling=true -qa)
+#     docker volume rm $(docker volume ls --filter dangling=true -q)
+#     docker rmi -f $(docker images -qa)
+# }
 
-armageddon() {
-    removecontainers
-    docker network prune -f
-    docker rmi -f $(docker images --filter dangling=true -qa)
-    docker volume rm $(docker volume ls --filter dangling=true -q)
-    docker rmi -f $(docker images -qa)
-}
-
-
+export GOPATH=$HOME/gopath
+export PATH=$GOPATH:$GOPATH/bin:$PATH

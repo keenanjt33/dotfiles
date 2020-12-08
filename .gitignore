@@ -49,3 +49,7 @@ venv
 node_modules
 .sass-cache
 .cfg
+
+# keys
+
+.ssh/id_*

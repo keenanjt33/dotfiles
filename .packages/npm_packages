@@ -1,0 +1,5 @@
+/usr/lib
+├── neovim@4.9.0
+├── node-gyp@7.1.2
+└── npm@6.14.11
+

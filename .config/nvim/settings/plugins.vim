@@ -7,14 +7,14 @@ call plug#begin()
     Plug 'junegunn/goyo.vim'
     Plug 'flazz/vim-colorschemes'
     Plug 'amix/vim-zenroom2'
-    Plug 'pangloss/vim-javascript'
-    Plug 'leshill/vim-json'
-    Plug 'mxw/vim-jsx'
+    " Plug 'pangloss/vim-javascript'
+    " Plug 'leshill/vim-json'
+    " Plug 'mxw/vim-jsx'
     Plug 'tpope/vim-surround'
-    Plug 'ctrlpvim/ctrlp.vim'
+    " Plug 'ctrlpvim/ctrlp.vim'
     Plug 'itchyny/lightline.vim'
-    Plug 'w0rp/ale'
-    Plug 'lumiliet/vim-twig'
+    " Plug 'w0rp/ale'
+    " Plug 'lumiliet/vim-twig'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
@@ -24,7 +24,7 @@ call plug#begin()
     Plug 'junegunn/gv.vim'
     Plug 'honza/vim-snippets'
     Plug 'unblevable/quick-scope'
-    Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
+    " Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'sheerun/vim-polyglot'
     Plug 'voldikss/vim-floaterm'
@@ -38,6 +38,19 @@ call plug#end()            " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:coc_global_extensions = [
+  \'coc-markdownlint',
+  \'coc-pyright',
+  \'coc-go',
+  \'coc-explorer',
+  \'coc-json', 
+  \'coc-git',
+  \'coc-css',
+  \'coc-eslint',
+  \'coc-html',
+  \'coc-tailwindcss',
+  \]
 
 " let g:tmuxline_theme = 'seoul256'
 

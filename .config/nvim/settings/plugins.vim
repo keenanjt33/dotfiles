@@ -24,7 +24,6 @@ call plug#begin()
     Plug 'junegunn/gv.vim'
     Plug 'honza/vim-snippets'
     Plug 'unblevable/quick-scope'
-    Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'sheerun/vim-polyglot'
     Plug 'voldikss/vim-floaterm'
@@ -44,7 +43,7 @@ call plug#end()            " required
 let g:markdown_fenced_languages = ['bash=sh', 'css', 'django', 'javascript', 'js=javascript', 'json=javascript', 'perl', 'php', 'python', 'ruby', 'sass', 'xml', 'html', 'vim']
 
 " let g:coc_node_path = '/Users/keenantullis/.nvm/versions/node/v14.3.0/bin/node'
-let g:coc_node_path = '/usr/bin/node'
+let g:coc_node_path = '/Users/keenantullis/.asdf/shims/node'
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
@@ -185,10 +184,6 @@ augroup END
 
 let g:qs_max_chars=150
 
-" === ranger === "
-" let g:rnvimr_ex_enable = 1
-" let g:rnvimr_pick_enable = 1
-
 " === floaterm === "
 let g:floaterm_keymap_toggle = '<F1>'
 let g:floaterm_keymap_next   = '<F2>'
@@ -221,7 +216,6 @@ let g:which_key_map['/'] = [ '<Plug>NERDCommenterToggle'  , 'comment' ]
 let g:which_key_map['e'] = [ ':CocCommand explorer'       , 'explorer' ]
 let g:which_key_map['f'] = [ ':Files'                     , 'search files' ]
 let g:which_key_map['h'] = [ '<C-W>s'                     , 'split below']
-" let g:which_key_map['r'] = [ ':RnvimrToggle<CR>'          , 'ranger' ]
 let g:which_key_map['T'] = [ ':Rg'                        , 'search text' ]
 let g:which_key_map['v'] = [ '<C-W>v'                     , 'split right']
 let g:which_key_map['z'] = [ 'Goyo'                       , 'zen' ]

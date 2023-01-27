@@ -1,6 +1,6 @@
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$HOME/bin:$HOME/Library/Python/3.7/bin:$PATH:$PATH
+# export PATH=$HOME/bin:$HOME/Library/Python/3.7/bin:$PATH:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -9,7 +9,7 @@ export PATH=$PATH:'/usr/local/go/bin'
 
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
-alias py='python3.7'
+# alias py='python3.7'
 
 # todoist cli (https://github.com/sachaos/todoist)
 # source "$HOME/.oh-my-zsh/custom/todoist_function.sh"
@@ -100,6 +100,7 @@ plugins=(
     lean
     z
     fzf
+    asdf
 )
 
 source $ZSH/oh-my-zsh.sh

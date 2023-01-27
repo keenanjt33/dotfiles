@@ -11,15 +11,6 @@ alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 # alias py='python3.7'
 
-# todoist cli (https://github.com/sachaos/todoist)
-# source "$HOME/.oh-my-zsh/custom/todoist_function.sh"
-
-# nvm sruff
-export NVM_DIR="$HOME/.nvm"
-NVM_HOMEBREW="/usr/local/opt/nvm/nvm.sh"
-[ -s "$NVM_HOMEBREW" ] && \. "$NVM_HOMEBREW"
-[ -x "$(command -v npm)" ] && export NODE_PATH=$NODE_PATH:`npm root -g`
-
 ### Git customization #########################################################
 alias gs='git status'
 alias gd='git diff'
@@ -35,7 +26,8 @@ alias g=git
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # ZSH_THEME="theunraveler"
 # ZSH_THEME="geometry/geometry"
-# ZSH_THEME="miekg/lean"
+# ZSH_THEME="lean"
+# ZSH_THEME="seoul256"
 
 # https://github.com/itchyny/lightline.vim
 export TERM=xterm-256color

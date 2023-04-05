@@ -84,6 +84,7 @@ set ffs=unix,dos,mac
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax enable 
+syntax on 
 if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
@@ -150,10 +151,10 @@ set smarttab
 set shiftwidth=4
 set tabstop=4
 autocmd FileType html setlocal ts=2 sts=2 sw=2
-autocmd FileType css setlocal ts=2 sts=2 sw=2
+" autocmd FileType css setlocal ts=2 sts=2 sw=2
 autocmd FileType html.twig setlocal ts=2 sts=2 sw=2
 autocmd FileType markdown setlocal ts=2 sts=2 sw=2
-autocmd FileType javascript setlocal ts=2 sts=2 sw=2
+" autocmd FileType javascript setlocal ts=2 sts=2 sw=2
 set ai "Auto indent
 set si "Smart indent
 set nowrap

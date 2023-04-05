@@ -9,8 +9,6 @@ export PATH=$PATH:'/usr/local/go/bin'
 
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
-# alias py='python3.7'
-
 ### Git customization #########################################################
 alias gs='git status'
 alias gd='git diff'
@@ -93,6 +91,8 @@ plugins=(
     z
     fzf
     asdf
+    poetry
+    virtualenv
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -122,7 +122,6 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 export FZF_COMPLETION_TRIGGER='##' # change ** to whatever you like
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
-
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -184,3 +183,60 @@ fi
 
 export GOPATH=$HOME/gopath
 export PATH=$GOPATH:$GOPATH/bin:$PATH
+export PATH="/Applications/Postgres.app/Contents/Versions/12/bin:$PATH"
+
+# https://stackoverflow.com/a/67738782
+# Set your preferred Python version.
+export PYENV_VERSION=3.10.10
+
+export PIPX_BIN_DIR=~/.local/bin
+export PYENV_ROOT=~/.pyenv
+
+# -U eliminates duplicates.
+export -U PATH path         
+path=( 
+    $PIPX_BIN_DIR
+    $PYENV_ROOT/{bin,shims} 
+    $path
+)
+
+# Updates the global python, if necessary, and installs/upgrades pipenv.
+pybake() {
+  # Install pyenv, if necessary.
+  command -v pyenv > /dev/null || 
+      brew install pyenv
+
+  # Install your preferred Python.
+  # Does nothing if $PYENV_VERSION hasn't changed.
+  pyenv install --skip-existing $PYENV_VERSION
+
+  pyenv global $PYENV_VERSION  # Make it your default.
+  pip install -U pip           # Update pip.
+
+  # Install pipx (into ~/.local/bin) or update it.
+  # pipx is like brew, but for Python.
+  pip install -U --user pipx   
+
+  # Install or update pipenv.
+  pipx ${${$( command -v pipenv ):+upgrade}:-install} pipenv
+}
+
+eval "$( pyenv init - )"
+eval "$( pip completion --zsh )"
+eval "$( register-python-argcomplete pipx )"
+
+fpath+=~/.zfunc
+autoload -Uz compinit && compinit
+
+# export PROMPT_LEAN_LEFT=(status virtualenv)
+# export PROMPT_LEAN_LEFT='%{$fg[green]%}$(virtualenv_info)%{$reset_color%}%'
+# ZSH_THEME_VIRTUALENV_PREFIX
+
+function virtualenv_info {
+    # [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
+    [ $VIRTUAL_ENV ] && echo '(venv) '
+}
+# export PROMPT_LEAN_LEFT='%{$fg[green]%}$(virtualenv_info)%{$reset_color%}%'
+export PROMPT_LEAN_LEFT='virtualenv_info'
+
+source ~/.zshrc.tillable

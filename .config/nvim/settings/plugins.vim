@@ -2,6 +2,7 @@
 
 call plug#begin()
 
+    Plug 'junegunn/seoul256.vim'
     Plug 'scrooloose/nerdcommenter'
     Plug 'godlygeek/tabular'
     Plug 'junegunn/goyo.vim'
@@ -37,7 +38,7 @@ call plug#end()            " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+colo seoul256
 " let g:tmuxline_theme = 'seoul256'
 
 let g:markdown_fenced_languages = ['bash=sh', 'css', 'django', 'javascript', 'js=javascript', 'json=javascript', 'perl', 'php', 'python', 'ruby', 'sass', 'xml', 'html', 'vim']

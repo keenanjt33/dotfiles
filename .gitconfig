@@ -16,3 +16,5 @@
 	smudge = git-lfs smudge %f
 [core]
 	excludesfile = /Users/keenantullis/.gitignore
+[pull]
+	rebase = false

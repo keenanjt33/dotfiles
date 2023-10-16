@@ -20,6 +20,7 @@ call plug#begin()
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
     Plug 'airblade/vim-rooter'
+    Plug 'airblade/vim-gitgutter'
     Plug 'mhinz/vim-signify'
     Plug 'tpope/vim-fugitive'
     Plug 'junegunn/gv.vim'
@@ -32,6 +33,8 @@ call plug#begin()
     Plug 'alvan/vim-closetag'
     Plug 'dstein64/vim-startuptime'
     Plug 'ludovicchabant/vim-gutentags'
+    Plug 'nathanaelkane/vim-indent-guides'
+    Plug 'norcalli/nvim-colorizer.lua'
 
 call plug#end()            " required
 
@@ -117,7 +120,7 @@ command! -bang -nargs=? -complete=dir Files
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
+  \   fzf#vim#with_preview('up', 'ctrl-/'), <bang>0)
 
 " Ripgrep advanced
 function! RipgrepFzf(query, fullscreen)
@@ -367,3 +370,5 @@ let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.js'
 "     \ }
 " let g:closetag_shortcut = '>'
 " let g:closetag_close_shortcut = '<leader>>'
+
+let g:indent_guides_enable_on_vim_startup = 1

@@ -5,5 +5,15 @@
     "typescript.suggest.autoImports": true,
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "javascript.preferences.importModuleSpecifier": "non-relative",
+    "javascript.preferences.renameMatchingJsxTags": true,
+    "typescript.preferences.renameMatchingJsxTags": true,
+    "typescript.preferences.autoImportFileExcludePatterns": ["**/dist/**"],
+    "typescript.preferences.useAliasesForRenames": false,
+    "javascript.preferences.useAliasesForRenames": false,
+    "typescript.autoClosingTags": true,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+    "typescript.updateImportsOnFileMove.enabled": "prompt",
+    "typescript.suggest.paths": true,
+    "typescript.suggest.includeCompletionsForImportStatements": true,
     "coc.preferences.formatOnSaveFiletypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"]
 }

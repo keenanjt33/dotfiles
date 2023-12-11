@@ -30,7 +30,7 @@ alias g=git
 # ZSH_THEME="seoul256"
 
 # https://github.com/itchyny/lightline.vim
-export TERM=xterm-256color
+export TERM=screen-256color
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load

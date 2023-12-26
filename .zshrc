@@ -240,4 +240,6 @@ function virtualenv_info {
 # export PROMPT_LEAN_LEFT='%{$fg[green]%}$(virtualenv_info)%{$reset_color%}%'
 export PROMPT_LEAN_LEFT='virtualenv_info'
 
+alias bnvim='NVIM_APPNAME=nvim-beta nvim' # LazyVim
+
 source ~/.zshrc.tillable

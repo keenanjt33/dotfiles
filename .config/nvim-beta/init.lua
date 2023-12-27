@@ -58,7 +58,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -288,8 +288,12 @@ require('telescope').setup {
       i = {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
+        ['<C-p>'] = require('telescope.actions.layout').toggle_preview,
       },
     },
+    preview = {
+      hide_on_startup = false -- hide previewer when picker starts
+    }
   },
 }
 

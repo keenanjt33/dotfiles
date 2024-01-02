@@ -18,7 +18,7 @@ return {
 					yaml = { "prettierd" },
 					markdown = { "prettierd" },
 					lua = { "stylua" },
-					python = { "isort", "black" },
+					python = { "isort", "black", "autoflake" },
 				},
 				format_on_save = {
 					lsp_fallback = false,

@@ -243,3 +243,5 @@ export PROMPT_LEAN_LEFT='virtualenv_info'
 alias bnvim='NVIM_APPNAME=nvim-beta nvim' # LazyVim
 
 source ~/.zshrc.tillable
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"

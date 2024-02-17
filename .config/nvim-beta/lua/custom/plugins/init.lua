@@ -3,10 +3,12 @@ return {
 	"theprimeagen/harpoon",
 	{
 		"stevearc/conform.nvim",
-		event = { "BufReadPre", "BufNewFile" },
+		-- event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("conform").setup({
+				-- log_level = vim.log.levels.TRACE,
 				formatters_by_ft = {
+					python = { "isort", "black", "autoflake" },
 					javascript = { "prettierd" },
 					typescript = { "prettierd" },
 					javascriptreact = { "prettierd" },
@@ -17,8 +19,7 @@ return {
 					json = { "prettierd" },
 					yaml = { "prettierd" },
 					markdown = { "prettierd" },
-					lua = { "stylua" },
-					python = { "isort", "black", "autoflake" },
+					-- lua = { "stylua" },
 				},
 				format_on_save = {
 					lsp_fallback = false,
@@ -54,5 +55,16 @@ return {
 			}
 			require("telescope").load_extension("ui-select")
 		end
-	}
+	},
+	{
+		"ibhagwan/fzf-lua",
+		-- optional for icon support
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			-- calling `setup` is optional for customization
+			require("fzf-lua").setup({
+
+			})
+		end
+	},
 }

@@ -200,7 +200,7 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  require 'kickstart.plugins.autoformat',
+  -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -282,6 +282,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
+local actions = require('telescope.actions')
+
 require('telescope').setup {
   defaults = {
     mappings = {
@@ -291,9 +293,41 @@ require('telescope').setup {
         ['<C-p>'] = require('telescope.actions.layout').toggle_preview,
       },
     },
-    preview = {
-      hide_on_startup = false -- hide previewer when picker starts
-    }
+  },
+  pickers = {
+    live_grep = {
+      mappings = {
+        i = { ["<C-f>"] = actions.to_fuzzy_refine },
+      },
+    },
+    grep_string = {
+      mappings = {
+        i = { ["<C-f>"] = actions.to_fuzzy_refine },
+      },
+    },
+  },
+  extensions = {
+    fzf = {
+      fuzzy = true,                   -- false will only do exact matching
+      override_generic_sorter = true, -- override the generic sorter
+      override_file_sorter = true,    -- override the file sorter
+      case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
+    },
+    -- project = {
+    --   base_dirs = {
+    --     "~",
+    --     "F:\\",
+    --   },
+    --   hidden_files = false,
+    --   theme = "dropdown",
+    --   order_by = "recent",
+    --   search_by = "title",
+    --   on_project_selected = function(prompt_bufnr)
+    --     project_actions.find_project_files(prompt_bufnr, false)
+    --     -- project_actions.change_working_directory(prompt_bufnr)
+    --     -- vim.cmd("%bw!")
+    --   end,
+    -- },
   },
 }
 
@@ -334,7 +368,17 @@ local function live_grep_git_root()
   end
 end
 
+local function live_fuzzy_git_root()
+  local git_root = find_git_root()
+  if git_root then
+    require('telescope.builtin').grep_string {
+      search_dirs = { git_root }, shorten_path = true, word_match = "-w", only_sort_text = true, search = ''
+    }
+  end
+end
+
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
+vim.api.nvim_create_user_command('LiveFuzzyGitRoot', live_fuzzy_git_root, {})
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
@@ -360,7 +404,9 @@ vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { des
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
+vim.keymap.set('n', '<leader>sF', ':LiveFuzzyGitRoot<cr>', { desc = '[S]earch by [F]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
@@ -385,6 +431,9 @@ vim.defer_fn(function()
       'dockerfile',
       'json',
       'markdown',
+      'html',
+      'css',
+      'json',
     },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
@@ -517,6 +566,35 @@ require('which-key').register({
 require('mason').setup()
 require('mason-lspconfig').setup()
 
+-- local util = require('lspconfig/util')
+-- local path = util.path
+
+-- local function get_python_path(workspace)
+--   -- Use activated virtualenv.
+--   if vim.env.VIRTUAL_ENV then
+--     return path.join(vim.env.VIRTUAL_ENV, 'bin', 'python')
+--   end
+--
+--   -- Find and use virtualenv via poetry in workspace directory.
+--   local match = vim.fn.glob(path.join(workspace, 'poetry.lock'))
+--   if match ~= '' then
+--     local venv = vim.fn.trim(vim.fn.system('poetry env info -p'))
+--     return path.join(venv, 'bin', 'python')
+--   end
+--
+--   -- Fallback to system Python.
+--   return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+-- end
+--
+--
+-- local lspconfig = require('lspconfig')
+--
+-- lspconfig.pyright.setup({
+--   before_init = function(_, config)
+--     config.settings.python.pythonPath = get_python_path(config.root_dir)
+--   end
+-- })
+
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
@@ -527,7 +605,19 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   pyright = {},
+  -- before_init = function(_, config)
+  --   config.settings.python.pythonPath = get_python_path(config.root_dir)
+  -- end
+  -- on_init = function(client)
+  --   client.config.settings.python.pythonPath = get_python_path(client.config.root_dir)
+  -- end
+  --
+  -- local Path = require "plenary.path"
+  -- local venv = Path:new((config.root_dir:gsub("/", Path.path.sep)), ".venv")
+  -- config.settings.python.pythonPath = tostring(venv:joinpath("bin", "python"))
+  -- },
   tsserver = {},
+  eslint = {},
 
   lua_ls = {
     Lua = {
@@ -563,6 +653,21 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+
+-- require("lspconfig").pyright.setup {
+--   before_init = function(_, config)
+--     config.settings.python.pythonPath = get_python_path(config.root_dir)
+--   end
+-- }
+
+-- local lspconfig = require('lspconfig')
+--
+-- lspconfig.pyright.setup({
+--   before_init = function(_, config)
+--     config.settings.python.pythonPath = get_python_path(config.root_dir)
+--   end
+-- })
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`

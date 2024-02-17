@@ -248,3 +248,6 @@ alias bnvim='NVIM_APPNAME=nvim-beta nvim'
 source ~/.zshrc.tillable
 # eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
+
+# Created by `pipx` on 2024-02-17 19:01:02
+export PATH="$PATH:/Users/keenantullis/.local/bin"

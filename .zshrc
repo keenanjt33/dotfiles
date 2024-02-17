@@ -1,5 +1,8 @@
 # If you come from bash you might have to change your $PATH.
+#export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=/opt/homebrew/bin:$PATH
+# export PATH=$HOME/.asdf/shims/python
 # export PATH=$HOME/bin:$HOME/Library/Python/3.7/bin:$PATH:$PATH
 
 # Path to your oh-my-zsh installation.
@@ -188,43 +191,43 @@ export PATH="/Applications/Postgres.app/Contents/Versions/12/bin:$PATH"
 
 # https://stackoverflow.com/a/67738782
 # Set your preferred Python version.
-export PYENV_VERSION=3.10.10
+# export PYENV_VERSION=3.10.10
 
-export PIPX_BIN_DIR=~/.local/bin
-export PYENV_ROOT=~/.pyenv
+# export PIPX_BIN_DIR=~/.local/bin
+# export PYENV_ROOT=~/.pyenv
 
 # -U eliminates duplicates.
-export -U PATH path         
-path=( 
-    $PIPX_BIN_DIR
-    $PYENV_ROOT/{bin,shims} 
-    $path
-)
+# export -U PATH path         
+# path=( 
+#     $PIPX_BIN_DIR
+#     $PYENV_ROOT/{bin,shims} 
+#     $path
+# )
 
 # Updates the global python, if necessary, and installs/upgrades pipenv.
-pybake() {
-  # Install pyenv, if necessary.
-  command -v pyenv > /dev/null || 
-      brew install pyenv
+# pybake() {
+#   # Install pyenv, if necessary.
+#   command -v pyenv > /dev/null || 
+#       brew install pyenv
+#
+#   # Install your preferred Python.
+#   # Does nothing if $PYENV_VERSION hasn't changed.
+#   pyenv install --skip-existing $PYENV_VERSION
+#
+#   pyenv global $PYENV_VERSION  # Make it your default.
+#   pip install -U pip           # Update pip.
+#
+#   # Install pipx (into ~/.local/bin) or update it.
+#   # pipx is like brew, but for Python.
+#   pip install -U --user pipx   
+#
+#   # Install or update pipenv.
+#   pipx ${${$( command -v pipenv ):+upgrade}:-install} pipenv
+# }
 
-  # Install your preferred Python.
-  # Does nothing if $PYENV_VERSION hasn't changed.
-  pyenv install --skip-existing $PYENV_VERSION
-
-  pyenv global $PYENV_VERSION  # Make it your default.
-  pip install -U pip           # Update pip.
-
-  # Install pipx (into ~/.local/bin) or update it.
-  # pipx is like brew, but for Python.
-  pip install -U --user pipx   
-
-  # Install or update pipenv.
-  pipx ${${$( command -v pipenv ):+upgrade}:-install} pipenv
-}
-
-eval "$( pyenv init - )"
-eval "$( pip completion --zsh )"
-eval "$( register-python-argcomplete pipx )"
+# eval "$( pyenv init - )"
+#eval "$( pip completion --zsh )"
+#eval "$( register-python-argcomplete pipx )"
 
 fpath+=~/.zfunc
 autoload -Uz compinit && compinit
@@ -240,8 +243,8 @@ function virtualenv_info {
 # export PROMPT_LEAN_LEFT='%{$fg[green]%}$(virtualenv_info)%{$reset_color%}%'
 export PROMPT_LEAN_LEFT='virtualenv_info'
 
-alias bnvim='NVIM_APPNAME=nvim-beta nvim' # LazyVim
+alias bnvim='NVIM_APPNAME=nvim-beta nvim'
 
 source ~/.zshrc.tillable
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"

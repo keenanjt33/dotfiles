@@ -21,11 +21,17 @@ return {
 					markdown = { "prettierd" },
 					-- lua = { "stylua" },
 				},
-				format_on_save = {
-					lsp_fallback = false,
-					async = false,
-					timeout_ms = 5000,
-				},
+				format_on_save = function(bufnr)
+					-- Disable with a global or buffer-local variable
+					if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+						return
+					end
+					return {
+						lsp_fallback = false,
+						async = false,
+						timeout_ms = 5000,
+					}
+				end
 			})
 		end,
 	},
@@ -67,4 +73,24 @@ return {
 			})
 		end
 	},
+	{
+		"ibhagwan/fzf-lua",
+		-- optional for icon support
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			-- calling `setup` is optional for customization
+			require("fzf-lua").setup({
+
+			})
+		end
+	},
+    {
+        "norcalli/nvim-colorizer.lua",
+        opts = {
+            css = { css = true },
+            "javascript",
+            "typescript",
+            "html",
+        },
+    },
 }

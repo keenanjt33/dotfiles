@@ -243,7 +243,7 @@ function virtualenv_info {
 # export PROMPT_LEAN_LEFT='%{$fg[green]%}$(virtualenv_info)%{$reset_color%}%'
 export PROMPT_LEAN_LEFT='virtualenv_info'
 
-alias bnvim='NVIM_APPNAME=nvim-beta nvim'
+# alias bnvim='NVIM_APPNAME=nvim-beta nvim'
 
 source ~/.zshrc.tillable
 # eval "$(pyenv init -)"

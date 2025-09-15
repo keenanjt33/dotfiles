@@ -202,93 +202,6 @@ vim.keymap.set('n', '<leader>sF', ':LiveFuzzyGitRoot<cr>', { desc = '[S]earch by
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
--- [[ Configure Treesitter ]]
--- See `:help nvim-treesitter`
--- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
-vim.defer_fn(function()
-  require('nvim-treesitter.configs').setup {
-    -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = {
-      'c',
-      'cpp',
-      'lua',
-      'python',
-      'tsx',
-      'javascript',
-      'typescript',
-      'tsx',
-      'vimdoc',
-      'vim',
-      'bash',
-      'dockerfile',
-      'json',
-      'markdown',
-      'html',
-      'css',
-      'json',
-    },
-
-    -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
-
-    highlight = { enable = true },
-    indent = { enable = true },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = '<c-space>',
-        node_incremental = '<c-space>',
-        scope_incremental = '<c-s>',
-        node_decremental = '<M-space>',
-      },
-    },
-    textobjects = {
-      select = {
-        enable = true,
-        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-        keymaps = {
-          -- You can use the capture groups defined in textobjects.scm
-          ['aa'] = '@parameter.outer',
-          ['ia'] = '@parameter.inner',
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',
-          ['ic'] = '@class.inner',
-        },
-      },
-      move = {
-        enable = true,
-        set_jumps = true, -- whether to set jumps in the jumplist
-        goto_next_start = {
-          [']m'] = '@function.outer',
-          [']]'] = '@class.outer',
-        },
-        goto_next_end = {
-          [']M'] = '@function.outer',
-          [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-          ['[m'] = '@function.outer',
-          ['[['] = '@class.outer',
-        },
-        goto_previous_end = {
-          ['[M'] = '@function.outer',
-          ['[]'] = '@class.outer',
-        },
-      },
-      -- swap = {
-      --   enable = true,
-      --   swap_next = {
-      --     ['<leader>a'] = '@parameter.inner',
-      --   },
-      --   swap_previous = {
-      --     ['<leader>A'] = '@parameter.inner',
-      --   },
-      -- },
-    },
-  }
-end, 0)
-
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -355,8 +268,8 @@ require('which-key').register({
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
-require('mason').setup()
-require('mason-lspconfig').setup()
+-- require('mason').setup()
+-- require('mason-lspconfig').setup()
 
 -- local util = require('lspconfig/util')
 -- local path = util.path
@@ -387,39 +300,6 @@ require('mason-lspconfig').setup()
 --   end
 -- })
 
--- Enable the following language servers
---  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
---  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config. You must look up that documentation yourself.
---
---  If you want to override the default filetypes that your language server will attach to you can
---  define the property 'filetypes' to the map in question.
-local servers = {
-  pyright = {},
-  -- before_init = function(_, config)
-  --   config.settings.python.pythonPath = get_python_path(config.root_dir)
-  -- end
-  -- on_init = function(client)
-  --   client.config.settings.python.pythonPath = get_python_path(client.config.root_dir)
-  -- end
-  --
-  -- local Path = require "plenary.path"
-  -- local venv = Path:new((config.root_dir:gsub("/", Path.path.sep)), ".venv")
-  -- config.settings.python.pythonPath = tostring(venv:joinpath("bin", "python"))
-  -- },
-  tsserver = {},
-  eslint = {},
-
-  lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      -- diagnostics = { disable = { 'missing-fields' } },
-    },
-  },
-}
 
 -- Setup neovim lua configuration
 require('neodev').setup()
@@ -429,22 +309,22 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
-local mason_lspconfig = require 'mason-lspconfig'
-
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
-
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end,
-}
+-- local mason_lspconfig = require 'mason-lspconfig'
+--
+-- mason_lspconfig.setup {
+--   ensure_installed = vim.tbl_keys(servers),
+-- }
+--
+-- mason_lspconfig.setup_handlers {
+--   function(server_name)
+--     require('lspconfig')[server_name].setup {
+--       capabilities = capabilities,
+--       on_attach = on_attach,
+--       settings = servers[server_name],
+--       filetypes = (servers[server_name] or {}).filetypes,
+--     }
+--   end,
+-- }
 
 
 -- require("lspconfig").pyright.setup {

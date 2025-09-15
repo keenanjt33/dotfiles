@@ -1,3 +1,5 @@
+require('plugins.autoformat')
+
 return {
 	"mbbill/undotree",
 	"theprimeagen/harpoon",
@@ -84,13 +86,13 @@ return {
 			})
 		end
 	},
-    {
-        "norcalli/nvim-colorizer.lua",
-        opts = {
-            css = { css = true },
-            "javascript",
-            "typescript",
-            "html",
-        },
-    },
+	{
+		"norcalli/nvim-colorizer.lua",
+		opts = {
+			css = { css = true },
+			"javascript",
+			"typescript",
+			"html",
+		},
+	},
 }

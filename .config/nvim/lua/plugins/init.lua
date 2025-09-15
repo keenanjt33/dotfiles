@@ -5,37 +5,48 @@ return {
 	"theprimeagen/harpoon",
 	{
 		"stevearc/conform.nvim",
-		-- event = { "BufReadPre", "BufNewFile" },
-		config = function()
-			require("conform").setup({
-				-- log_level = vim.log.levels.TRACE,
-				formatters_by_ft = {
-					python = { "isort", "black", "autoflake" },
-					javascript = { "prettierd" },
-					typescript = { "prettierd" },
-					javascriptreact = { "prettierd" },
-					typescriptreact = { "prettierd" },
-					svelte = { "prettierd" },
-					css = { "prettierd" },
-					html = { "prettierd" },
-					json = { "prettierd" },
-					yaml = { "prettierd" },
-					markdown = { "prettierd" },
-					-- lua = { "stylua" },
-				},
-				format_on_save = function(bufnr)
-					-- Disable with a global or buffer-local variable
-					if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-						return
-					end
+		event = { 'BufWritePre' },
+		cmd = { 'ConformInfo' },
+		keys = {
+			{
+				'<leader>f',
+				function()
+					require('conform').format { async = true, lsp_format = 'fallback' }
+				end,
+				mode = '',
+				desc = '[F]ormat buffer',
+			},
+		},
+		opts = {
+			notify_on_error = false,
+			format_on_save = function(bufnr)
+				-- Disable "format_on_save lsp_fallback" for languages that don't
+				-- have a well standardized coding style. You can add additional
+				-- languages here or re-enable it for the disabled ones.
+				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+					return
+				else
 					return {
-						lsp_fallback = false,
-						async = false,
-						timeout_ms = 5000,
+						timeout_ms = 500,
+						lsp_format = 'fallback',
 					}
 				end
-			})
-		end,
+			end,
+			formatters_by_ft = {
+				lua = { 'stylua' },
+				python = { "isort", "black", "autoflake" },
+				javascript = { "prettierd" },
+				typescript = { "prettierd" },
+				javascriptreact = { "prettierd" },
+				typescriptreact = { "prettierd" },
+				svelte = { "prettierd" },
+				css = { "prettierd" },
+				html = { "prettierd" },
+				json = { "prettierd" },
+				yaml = { "prettierd" },
+				markdown = { "prettierd" },
+			},
+		},
 	},
 	{
 		"nvim-neo-tree/neo-tree.nvim",

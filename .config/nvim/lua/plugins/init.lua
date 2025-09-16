@@ -1,8 +1,5 @@
-require('plugins.autoformat')
-
 return {
 	"mbbill/undotree",
-	"theprimeagen/harpoon",
 	{
 		"stevearc/conform.nvim",
 		event = { 'BufWritePre' },

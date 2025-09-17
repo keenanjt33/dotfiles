@@ -3,6 +3,7 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=/opt/homebrew/bin:$PATH
 # export PATH=$HOME/.asdf/shims/python
+export PATH="$HOME/.asdf/bin:$HOME/.asdf/shims:$PATH"
 # export PATH=$HOME/bin:$HOME/Library/Python/3.7/bin:$PATH:$PATH
 
 # Path to your oh-my-zsh installation.

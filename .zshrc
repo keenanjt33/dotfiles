@@ -1,10 +1,11 @@
-# If you come from bash you might have to change your $PATH.
-#export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=/opt/homebrew/bin:$PATH
-# export PATH=$HOME/.asdf/shims/python
-export PATH="$HOME/.asdf/bin:$HOME/.asdf/shims:$PATH"
-# export PATH=$HOME/bin:$HOME/Library/Python/3.7/bin:$PATH:$PATH
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+export ASDF_DEFAULT_TOOL_VERSIONS_FILENAME=".tool-versions"
+
+fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+autoload -Uz compinit && compinit
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"

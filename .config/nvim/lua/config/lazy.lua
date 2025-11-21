@@ -450,6 +450,13 @@ require('lazy').setup({
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+    init = function()
+      vim.filetype.add {
+        extension = {
+          mdx = 'markdown',
+        },
+      }
+    end,
     opts = {
       ensure_installed = {
         'c',
